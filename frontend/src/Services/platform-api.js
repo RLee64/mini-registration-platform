@@ -11,4 +11,14 @@ const getEvents = () => {
   return request.then((response) => response.data);
 };
 
-export default { getAccounts, getEvents }
+const postAccount = (newAccount) => {
+  const request = axios.post(`${baseUrl}/accounts`, newAccount);
+  return request.then((response) => response.data);
+};
+
+const postEvent = (newEvent) => {
+  const request = axios.post(`${baseUrl}/events`, newEvent);
+  return request.then((response) => response.data);
+};
+
+export default { getAccounts, getEvents, postAccount, postEvent };

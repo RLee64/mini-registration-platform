@@ -10,11 +10,31 @@ const AdminPage = () => {
   const [newEventDescription, setNewEventDescription] = useState("");
   const [newEventDate, setNewEventDate] = useState("");
 
+  const clearEventFields = () => {
+    setNewEventName("");
+    setNewEventDescription("");
+    setNewEventDate("");
+  };
+
   const createEvent = (event) => {
     event.preventDefault();
     console.log("Creating event");
+
+    const newEvent = {
+      name: newEventName,
+      description: newEventDescription,
+      date: newEventDate,
+    };
+
+    platformApi.postEvent(newEvent).then((returnedEvent) => {
+      setEvents(events.concat(returnedEvent));
+      clearEventFields();
+    });
   };
 
+  /*Currently events and accounts are only called for at the beginning,
+  meaning refreshing is currently required to keep track of updates.
+  Maybe a potential fix would be nice? But it's not necessary*/
   useEffect(() => {
     platformApi.getEvents().then((receivedEvents) => {
       setEvents(receivedEvents);
@@ -41,15 +61,23 @@ const AdminPage = () => {
       <div>
         CREATE EVENT
         <form onSubmit={createEvent}>
-          name <input value={newEventName} onChange={setNewEventName} />
+          name{" "}
+          <input
+            value={newEventName}
+            onChange={(event) => setNewEventName(event.target.value)}
+          />
           description{" "}
           <input
             value={newEventDescription}
-            onChange={setNewEventDescription}
+            onChange={(event) => setNewEventDescription(event.target.value)}
           />
           date{" "}
-          <input value={newEventDate} onChange={setNewEventDate} type="date" />
-          <button type="submit">Login</button>
+          <input
+            value={newEventDate}
+            onChange={(event) => setNewEventDate(event.target.value)}
+            type="date"
+          />
+          <button type="submit">Submit</button>
         </form>
       </div>
       <div>
