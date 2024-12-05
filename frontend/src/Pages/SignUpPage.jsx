@@ -1,12 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom'
 
 const SignUpPage = () => {
   const [newName, setNewName] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
-  const TEMPFUNCTION = () => {
+  const navigate = useNavigate()
+
+  //replace soon
+  const TEMPFUNCTION = (event) => {
+    event.preventDefault()
     console.log("Time to add a person");
+    navigate('/login')
   }
 
   return (
