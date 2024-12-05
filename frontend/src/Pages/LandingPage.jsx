@@ -18,7 +18,7 @@ const events = [
 const LandingPage = () => {
   /*
   An option, but consider implementing protected routes instead
-  
+
   React.useEffect(() => {
     if (!currentUser) {
       navigate("/login", { replace: true });
