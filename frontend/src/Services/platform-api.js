@@ -21,9 +21,9 @@ const postEvent = (newEvent) => {
   return request.then((response) => response.data);
 };
 
-const authenticateLogin = (loginDetails) => {
-  const request = axios.post(`${baseUrl}/authentication`, loginDetails);
+const authLogin = (loginDetails) => {
+  const request = axios.post(`${baseUrl}/auth`, loginDetails);
   return request.then((response) => response.data);
 };
 
-export default { getAccounts, getEvents, postAccount, postEvent, authenticateLogin };
+export default { getAccounts, getEvents, postAccount, postEvent, authLogin };

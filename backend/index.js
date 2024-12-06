@@ -85,7 +85,7 @@ app.post("/api/events", async (request, response) => {
   response.json(newEvent);
 });
 
-app.post("/api/authentication", async (request, response) => {
+app.post("/api/auth", async (request, response) => {
   const { email, password } = request.body;
   const locatedAccount = accounts.find((account) => account.email === email);
   if (!locatedAccount) {
