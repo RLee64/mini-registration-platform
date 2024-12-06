@@ -1,27 +1,44 @@
-import { useState } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const [loginName, setLoginName] = useState("");
   const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setErrorMessage("");
+  }, [loginEmail, loginPassword]);
 
   const toSignUp = () => {
-    navigate('/sign-up')
-  }
+    navigate("/sign-up");
+  };
 
-  //replace soon
-  const TEMPLOGIN = (event) => {
-    event.preventDefault()
-  }
+  const login = (event) => {
+    event.preventDefault();
+    setLoginEmail('')
+    setLoginPassword('')
+  };
 
   return (
     <div>
       Login Page
+      <p>{errorMessage}</p>
       <form onSubmit={TEMPLOGIN}>
-        email <input value={loginName} onChange={setLoginName} />
-        password <input value={loginEmail} onChange={setLoginEmail} />
+        email{" "}
+        <input
+          value={loginEmail}
+          onChange={(event) => setLoginEmail(event.target.value)}
+          type="email"
+        />
+        password{" "}
+        <input
+          value={loginPassword}
+          onChange={(event) => setLoginPassword(event.target.value)}
+          type="password"
+        />
         <button type="submit">Login</button>
         <button onClick={toSignUp}>Create Account</button>
       </form>

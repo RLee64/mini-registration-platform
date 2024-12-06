@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import platformApi from "../Services/platform-api";
+import platformApi from "../services/platform-api";
 
 const SignUpPage = () => {
   const [newAccountName, setNewAccountName] = useState("");
@@ -40,6 +40,7 @@ const SignUpPage = () => {
         <input
           value={newAccountName}
           onChange={(event) => setNewAccountName(event.target.value)}
+          type="text"
         />
         email{" "}
         <input

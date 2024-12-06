@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import platformApi from "../Services/platform-api";
+import platformApi from "../services/platform-api";
 
 const AdminPage = () => {
   const [events, setEvents] = useState([]);
@@ -9,6 +9,22 @@ const AdminPage = () => {
   const [newEventName, setNewEventName] = useState("");
   const [newEventDescription, setNewEventDescription] = useState("");
   const [newEventDate, setNewEventDate] = useState("");
+
+  /*Currently events and accounts are only called for at the beginning,
+  meaning refreshing is currently required to keep track of updates.
+  Maybe a potential fix would be nice? But it's not necessary*/
+  useEffect(() => {
+    platformApi.getEvents().then((receivedEvents) => {
+      setEvents(receivedEvents);
+    });
+  }, []);
+
+  useEffect(() => {
+    platformApi.getAccounts().then((receivedAccounts) => {
+      setAccounts(receivedAccounts);
+    });
+  }, []);
+
 
   const clearEventFields = () => {
     setNewEventName("");
@@ -32,21 +48,6 @@ const AdminPage = () => {
     });
   };
 
-  /*Currently events and accounts are only called for at the beginning,
-  meaning refreshing is currently required to keep track of updates.
-  Maybe a potential fix would be nice? But it's not necessary*/
-  useEffect(() => {
-    platformApi.getEvents().then((receivedEvents) => {
-      setEvents(receivedEvents);
-    });
-  }, []);
-
-  useEffect(() => {
-    platformApi.getAccounts().then((receivedAccounts) => {
-      setAccounts(receivedAccounts);
-    });
-  }, []);
-
   return (
     <div>
       ADMIN STUFF
@@ -65,11 +66,13 @@ const AdminPage = () => {
           <input
             value={newEventName}
             onChange={(event) => setNewEventName(event.target.value)}
+            type="text"
           />
           description{" "}
           <input
             value={newEventDescription}
             onChange={(event) => setNewEventDescription(event.target.value)}
+            type="text"
           />
           date{" "}
           <input
