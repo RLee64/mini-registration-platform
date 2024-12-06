@@ -22,10 +22,10 @@ const LoginPage = () => {
     event.preventDefault();
     const loginAccount = {
       email: loginEmail,
-      password: loginPassword
-    }
+      password: loginPassword,
+    };
     platformApi.authenticateLogin(loginAccount).then((returnedData) => {
-      //do smth I guess
+      
       setLoginEmail("");
       setLoginPassword("");
     });

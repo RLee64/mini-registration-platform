@@ -11,12 +11,14 @@ let accounts = [
     name: "Steve",
     email: "steve@gmail.com",
     password: "password123",
+    role: "admin"
   },
   {
     id: "2",
     name: "John Smith",
     email: "bigplanes@gmail.com",
     password: "vroomvroom",
+    role: "member"
   },
 ];
 
