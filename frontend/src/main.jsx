@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx"
 import SignUpPage from "./pages/SignUpPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
 
