@@ -50,9 +50,9 @@ const AdminPage = () => {
 
   return (
     <div>
-      ADMIN STUFF
+      <h1>Admin Panel</h1>
       <div>
-        EVENTS
+        <h2>Events</h2>
         <ul>
           {events.map((event) => (
             <li key={event.id}>{event.name}</li>
@@ -60,22 +60,25 @@ const AdminPage = () => {
         </ul>
       </div>
       <div>
-        CREATE EVENT
+        <h2>Create Event</h2>
         <form onSubmit={createEvent}>
-          name{" "}
+          <label htmlFor="eventName">Name</label>
           <input
+            id="eventName"
             value={newEventName}
             onChange={(event) => setNewEventName(event.target.value)}
             type="text"
           />
-          description{" "}
+          <label htmlFor="eventDescription">Description</label>
           <input
+            id="eventDescription"
             value={newEventDescription}
             onChange={(event) => setNewEventDescription(event.target.value)}
             type="text"
           />
-          date{" "}
+          <label id="eventDate">Date</label>
           <input
+            id="eventDate"
             value={newEventDate}
             onChange={(event) => setNewEventDate(event.target.value)}
             type="date"
@@ -84,7 +87,8 @@ const AdminPage = () => {
         </form>
       </div>
       <div>
-        ACCOUNTS
+        <h2>
+          Registered Accounts</h2>
         <ul>
           {accounts.map((account) => (
             <li key={account.id}>{account.name}</li>

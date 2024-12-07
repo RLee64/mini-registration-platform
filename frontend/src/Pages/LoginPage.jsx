@@ -34,31 +34,34 @@ const LoginPage = () => {
         email: response.email,
         password: response.password,
         roles: response.roles,
-        accessToken: response.accessToken
-      })
+        accessToken: response.accessToken,
+      });
       setLoginEmail("");
       setLoginPassword("");
     });
   };
 
   return (
-    <div>
-      Login Page
+    <div className="form-box">
+      <h2>Log In</h2>
       <p>{errorMessage}</p>
       <form onSubmit={login}>
-        email{" "}
+        <label htmlFor="loginEmail">Email</label>
         <input
+          id="loginEmail"
           value={loginEmail}
           onChange={(event) => setLoginEmail(event.target.value)}
           type="email"
         />
-        password{" "}
+        <label htmlFor="loginPassword">Password</label>
         <input
+          id="loginPassword"
           value={loginPassword}
           onChange={(event) => setLoginPassword(event.target.value)}
           type="password"
         />
-        <button type="submit">Login</button>
+        <button type="submit">Log In</button>
+        <p>Don't have an account?</p>
         <button onClick={toSignUp}>Create Account</button>
       </form>
     </div>

@@ -1,0 +1,42 @@
+:root {
+  font-family: Helvetica, Arial, sans-serif;
+  background-color: rgb(36, 36, 49);
+  color: rgba(255, 255, 255, 0.9);
+  --header-height: 60px;
+}
+
+header {
+    width: 100%;
+    background-color: rgb(11, 14, 60);
+    height: var(--header-height);
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+main {
+  margin-top: var(--header-height);
+}
+
+input {
+  display: block;
+  margin: 25px auto 25px auto;
+  width: 100%;
+}
+
+.form-box {
+    width: 80%;
+    max-width: 600px;
+    margin: 100px auto 0 auto;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 50px;
+}
+
+footer {
+    width: 100%;
+    background-color: rgb(35, 37, 60);
+    height: 50px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}

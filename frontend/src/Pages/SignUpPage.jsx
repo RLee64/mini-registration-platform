@@ -33,23 +33,26 @@ const SignUpPage = () => {
   };
 
   return (
-    <div>
-      Sign Up to NZPMC
+    <div className="form-box">
+      <h2>Sign Up to The NZPMC</h2>
       <form onSubmit={createAccount}>
-        name{" "}
+        <label htmlFor="signUpName">Name</label>
         <input
+          id="signUpName"
           value={newAccountName}
           onChange={(event) => setNewAccountName(event.target.value)}
           type="text"
         />
-        email{" "}
+        <label htmlFor="signUpEmail">Email</label>
         <input
+          id="signUpEmail"
           value={newAccountEmail}
           onChange={(event) => setNewAccountEmail(event.target.value)}
           type="email"
         />
-        password{" "}
+        <label htmlFor="signUpPassword">Password</label>
         <input
+          id="signUpPassword"
           value={newAccountPassword}
           onChange={(event) => setNewAccountPassword(event.target.value)}
           type="password"

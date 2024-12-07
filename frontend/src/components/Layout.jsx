@@ -2,11 +2,18 @@ import { Outlet } from "react-router-dom"
 
 const Layout = () => {
     return (
-        //HEADER
+        <>
+        <header>
+            <h1>NZPMC</h1>
+        </header>
         <main>
             <Outlet />
         </main>
-        //FOOTER
+        <footer>
+            mmm potato
+        </footer>
+        </>
+    
     )
 }
 
