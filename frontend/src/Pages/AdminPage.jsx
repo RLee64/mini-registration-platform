@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
+import { useAtomValue } from "jotai";
 
 import platformApi from "../services/platform-api";
+import { accessTokenAtom } from "../atoms";
 
 const AdminPage = () => {
+  const accessToken = useAtomValue(accessTokenAtom);
+
   const [events, setEvents] = useState([]);
   const [accounts, setAccounts] = useState([]);
 
@@ -14,18 +18,16 @@ const AdminPage = () => {
   meaning refreshing is currently required to keep track of updates.
   Maybe a potential fix would be nice? But it's not necessary*/
   useEffect(() => {
-    platformApi.getEvents().then((receivedEvents) => {
-      setEvents(receivedEvents);
-    });
-  }, []);
-
-  useEffect(() => {
-    platformApi.getAccounts().then((receivedAccounts) => {
+    platformApi.getAccounts(accessToken).then((receivedAccounts) => {
       setAccounts(receivedAccounts);
     });
   }, []);
 
-
+  useEffect(() => {
+    platformApi.getEvents().then((receivedEvents) => {
+      setEvents(receivedEvents);
+    });
+  }, []);
   const clearEventFields = () => {
     setNewEventName("");
     setNewEventDescription("");
@@ -42,7 +44,7 @@ const AdminPage = () => {
       date: newEventDate,
     };
 
-    platformApi.postEvent(newEvent).then((returnedEvent) => {
+    platformApi.postEvent(newEvent, accessToken).then((returnedEvent) => {
       setEvents(events.concat(returnedEvent));
       clearEventFields();
     });
@@ -87,8 +89,7 @@ const AdminPage = () => {
         </form>
       </div>
       <div>
-        <h2>
-          Registered Accounts</h2>
+        <h2>Registered Accounts</h2>
         <ul>
           {accounts.map((account) => (
             <li key={account.id}>{account.name}</li>

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSetAtom } from "jotai";
 
 import platformApi from "../services/platform-api";
-import useAuth from "../hooks/use-auth";
+import { accessTokenAtom, accessLevelAtom } from "../atoms";
 
 const LoginPage = () => {
-  const { setAuth } = useAuth();
+  const setAccessToken = useSetAtom(accessTokenAtom);
+  const setAccessLevel = useSetAtom(accessLevelAtom);
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -29,16 +31,19 @@ const LoginPage = () => {
       email: loginEmail,
       password: loginPassword,
     };
-    platformApi.authLogin(loginAccount).then((response) => {
-      setAuth({
-        email: response.email,
-        password: response.password,
-        roles: response.roles,
-        accessToken: response.accessToken,
+    platformApi
+      .authLogin(loginAccount)
+      .then((response) => {
+        setAccessToken(response.accessToken);
+        setAccessLevel(response.accessLevel);
+        setLoginEmail("");
+        setLoginPassword("");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log("ERROR WITH LOGIN");
+        console.log(error);
       });
-      setLoginEmail("");
-      setLoginPassword("");
-    });
   };
 
   return (
@@ -62,7 +67,9 @@ const LoginPage = () => {
         />
         <button type="submit">Log In</button>
         <p>Don't have an account?</p>
-        <button onClick={toSignUp}>Create Account</button>
+        <button type="button" onClick={toSignUp}>
+          Create Account
+        </button>
       </form>
     </div>
   );

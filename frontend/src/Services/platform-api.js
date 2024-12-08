@@ -1,8 +1,17 @@
 import axios from "axios";
+
 const baseUrl = "http://localhost:3001/api";
 
-const getAccounts = () => {
-  const request = axios.get(`${baseUrl}/accounts`);
+const getConfig = (accessToken) => {
+  console.log(accessToken)
+  return { headers: {
+    'Authorization': `Bearer ${accessToken}`
+  }}
+}
+
+//ADMIN NEEDED
+const getAccounts = (accessToken) => {
+  const request = axios.get(`${baseUrl}/accounts`, getConfig(accessToken));
   return request.then((response) => response.data);
 };
 
@@ -16,8 +25,9 @@ const postAccount = (newAccount) => {
   return request.then((response) => response.data);
 };
 
-const postEvent = (newEvent) => {
-  const request = axios.post(`${baseUrl}/events`, newEvent);
+//ADMIN NEEDED
+const postEvent = (newEvent, accessToken) => {
+  const request = axios.post(`${baseUrl}/events`, newEvent, getConfig(accessToken));
   return request.then((response) => response.data);
 };
 
