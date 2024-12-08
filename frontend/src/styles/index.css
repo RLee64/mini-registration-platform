@@ -12,6 +12,14 @@ header {
     position: fixed;
     top: 0;
     left: 0;
+    display: flex;
+    justify-content:space-between;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+header h1 {
+  margin-block: 0;
 }
 
 main {

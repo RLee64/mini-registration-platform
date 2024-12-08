@@ -11,14 +11,16 @@ let accounts = [
     id: "1",
     name: "Steve",
     email: "steve@gmail.com",
-    password: "$argon2id$v=19$m=65536,t=3,p=4$y+p3TKlzeluC5OFPjd9iHA$aK2IoM/344DLOzsV8hEwoMLC952vfFYjxHfJoyF/VfQ",
+    password:
+      "$argon2id$v=19$m=65536,t=3,p=4$y+p3TKlzeluC5OFPjd9iHA$aK2IoM/344DLOzsV8hEwoMLC952vfFYjxHfJoyF/VfQ",
     accessLevel: "admin",
   },
   {
     id: "2",
     name: "John Smith",
     email: "bigplanes@gmail.com",
-    password: "$argon2id$v=19$m=65536,t=3,p=4$y+p3TKlzeluC5OFPjd9iHA$aK2IoM/344DLOzsV8hEwoMLC952vfFYjxHfJoyF/VfQ",
+    password:
+      "$argon2id$v=19$m=65536,t=3,p=4$y+p3TKlzeluC5OFPjd9iHA$aK2IoM/344DLOzsV8hEwoMLC952vfFYjxHfJoyF/VfQ",
     accessLevel: "member",
   },
 ];
@@ -45,16 +47,16 @@ app.use(express.json());
 
 const authenticateToken = (request, response, next) => {
   const authHeader = request.headers["authorization"];
-  console.log(authHeader)
+  console.log(authHeader);
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return response.sendStatus(401);
 
-  console.log("the token was")
-  console.log(token)
+  console.log("the token was");
+  console.log(token);
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
     if (error) {
-      console.log("Token present but is invalid (expired or doesn't exist)")
+      console.log("Token present but is invalid (expired or doesn't exist)");
       return response.sendStatus(403); //Token present but is invalid (expired or doesn't exist)
     }
     request.user = user;
@@ -67,10 +69,23 @@ const authenticateToken = (request, response, next) => {
 //GET ACCOUNTS (ADMIN ONLY)
 app.get("/api/accounts", authenticateToken, (request, response) => {
   if (request.user.accessLevel !== "admin") {
-    return response.sendStatus(403)
+    //Return only the user's account
+    const personalAccount = accounts.find(
+      (account) => account.id === request.user.sub
+    );
+    const returnedDetails = {
+      name: personalAccount.name,
+      email: personalAccount.email,
+    };
+    return response.json(returnedDetails);
   }
-  //REMOVE PASSWORDS FROM DATA
-  response.json(accounts);
+  const returnedAccounts = accounts.map((account) => ({
+    id: account.id,
+    name: account.name,
+    email: account.email,
+    accessLevel: account.accessLevel,
+  }));
+  response.json(returnedAccounts);
 });
 
 //GET EVENTS
@@ -95,6 +110,7 @@ app.post("/api/accounts", async (request, response) => {
 
   newAccount.id = id;
   newAccount.password = await argon2.hash(newAccount.password);
+  newAccount.accessLevel = "member";
   accounts = accounts.concat(newAccount);
   response.json(newAccount);
 });
@@ -102,13 +118,13 @@ app.post("/api/accounts", async (request, response) => {
 //CREATE NEW EVENT (ADMIN ONLY)
 app.post("/api/events", authenticateToken, (request, response) => {
   if (request.user.accessLevel !== "admin") {
-    return response.sendStatus(403)
+    return response.sendStatus(403);
   }
   //TEMPORARY ID GENERATOR
   const maxId =
     events.length > 0 ? Math.max(...events.map((e) => Number(e.id))) : 0;
   const id = String(maxId + 1);
-  
+
   const newEvent = request.body;
   newEvent.id = id;
   events = events.concat(newEvent);
@@ -132,7 +148,7 @@ app.post("/api/auth", async (request, response) => {
       accessLevel: locatedAccount.accessLevel,
     };
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-    console.log(accessToken)
+    console.log(accessToken);
     response.status(200).json({
       accessToken: accessToken,
       accessLevel: locatedAccount.accessLevel, //Used on client-side to smooth experience
@@ -141,6 +157,15 @@ app.post("/api/auth", async (request, response) => {
     console.log("yeah that didn't work");
     response.sendStatus(401);
   }
+});
+
+app.put("/api/edit-name", authenticateToken, (request, response) => {
+  accounts = accounts.map((account) =>
+    account.id !== request.user.sub
+      ? account
+      : { ...account, name: request.body.newName }
+  );
+  response.json({newName: request.body.newName})
 });
 
 const PORT = process.env.PORT;

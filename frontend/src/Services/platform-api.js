@@ -9,7 +9,7 @@ const getConfig = (accessToken) => {
   }}
 }
 
-//ADMIN NEEDED
+//Returns all accounts if admin, but only personal account if member
 const getAccounts = (accessToken) => {
   const request = axios.get(`${baseUrl}/accounts`, getConfig(accessToken));
   return request.then((response) => response.data);
@@ -36,4 +36,9 @@ const authLogin = (loginDetails) => {
   return request.then((response) => response.data);
 };
 
-export default { getAccounts, getEvents, postAccount, postEvent, authLogin };
+const editName = (newName, accessToken) => {
+  const request = axios.put(`${baseUrl}/edit-name`, {newName: newName}, getConfig(accessToken))
+  return request.then((response) => response.data)
+}
+
+export default { getAccounts, getEvents, postAccount, postEvent, authLogin, editName };

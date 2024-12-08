@@ -4,7 +4,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { accessLevelAtom } from "../atoms";
 import AdminPage from "../Pages/AdminPage";
 
-const LandingPage = () => {
+const AdminDirectory = () => {
   const location = useLocation();
   const accessLevel = useAtomValue(accessLevelAtom);
   if (!accessLevel) {
@@ -16,4 +16,4 @@ const LandingPage = () => {
   return <Navigate to="/" state={{ from: location }} replace />;
 };
 
-export default LandingPage;
+export default AdminDirectory;

@@ -1,11 +1,10 @@
 import { Outlet } from "react-router-dom";
+import Header from "./Header";
 
 const Layout = () => {
   return (
     <>
-      <header>
-        <h1>NZPMC</h1>
-      </header>
+      <Header />
       <main>
         <Outlet />
       </main>

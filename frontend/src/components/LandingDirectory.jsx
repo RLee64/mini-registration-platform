@@ -9,12 +9,16 @@ import LandingSignedOutPage from "../pages/LandingSignedOutPage";
 const LandingPage = () => {
   const location = useLocation();
   const accessLevel = useAtomValue(accessLevelAtom);
+  console.log(accessLevel)
   if (!accessLevel) {
+    console.log("Signed Out")
     return <LandingSignedOutPage />;
   }
   if (accessLevel === "admin") {
+    console.log("User is an admin")
     return <Navigate to="/admin" state={{ from: location }} replace />;
   }
+  console.log("Signed In")
   return <LandingSignedInPage />;
 };
 

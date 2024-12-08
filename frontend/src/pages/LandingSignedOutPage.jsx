@@ -1,16 +1,25 @@
-import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import platformApi from "../services/platform-api";
 
 const LandingSignedOutPage = () => {
-  const navigate = useNavigate();
-  const toLogin = () => {
-    navigate("/login");
-  };
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    platformApi.getEvents().then((receivedEvents) => {
+      setEvents(receivedEvents);
+    });
+  }, []);
 
   return (
     <div>
       Landing Page (real) - you are signed out
-      <button onClick={toLogin}>Login</button>
+      <h2>Events</h2>
+        <ul>
+          {events.map((event) => (
+            <li key={event.id}>{event.name}</li>
+          ))}
+        </ul>
     </div>
   );
 };
