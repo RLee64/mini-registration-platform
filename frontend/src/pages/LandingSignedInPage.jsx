@@ -3,41 +3,33 @@ import { useAtomValue } from "jotai";
 
 import platformApi from "../services/platform-api";
 import { accessTokenAtom } from "../atoms";
+import EditName from "../components/EditName";
 
-const EditName = ({account, setAccount}) => {
-  const [editingName, setEditingName] = useState(false);
-  const [newName, setNewName] = useState("");
-  const accessToken = useAtomValue(accessTokenAtom)
-
-  const changeName = (event) => {
-    event.preventDefault();
-    platformApi.editName(newName, accessToken).then((response) => {
-      setAccount({...account, name: response.newName})
-      setEditingName(false);
-      setNewName("");
+const EventJoinable = ({event, account, setAccount}) => {
+  console.log(account.joinedEvents)
+  const accessToken = useAtomValue(accessTokenAtom);
+  console.log(accessToken)
+  const joinEvent = () => {
+    platformApi.joinEvent(event.id, accessToken).then((joinedEvent) => {
+      console.log("successful in joining event");
+      console.log(joinedEvent)
+      setAccount({...account, joinedEvents: account.joinedEvents.concat(joinedEvent.id)})
     });
   };
-
-  if (!editingName) {
-    return <button onClick={() => setEditingName(true)}>Edit name</button>;
-  }
   return (
-    <form onSubmit={changeName}>
-      <label htmlFor="newAccountName">New Name</label>
-      <input
-        id="newAccountName"
-        value={newName}
-        onChange={(event) => setNewName(event.target.value)}
-      />
-      <button type="submit">Submit</button>
-      <button type="button" onClick={() => setEditingName(false)}>
-        Cancel
-      </button>
-    </form>
+    <li>
+      <p>{event.name}</p>
+      {account.joinedEvents?.find((eventId) => eventId === event.id) ? (
+        <label>Joined!</label>
+      ) : (
+        <button onClick={joinEvent}>Join Event</button>
+      )}
+    </li>
   );
 };
 
 const LandingSignedInPage = () => {
+  console.log("refreshing page")
   const accessToken = useAtomValue(accessTokenAtom);
 
   const [events, setEvents] = useState([]);
@@ -45,9 +37,10 @@ const LandingSignedInPage = () => {
 
   useEffect(() => {
     platformApi.getEvents().then((receivedEvents) => {
+      console.log(receivedEvents)
       setEvents(receivedEvents);
     });
-  }, []);
+  }, [account]);
 
   useEffect(() => {
     platformApi.getAccounts(accessToken).then((receivedAccount) => {
@@ -61,7 +54,7 @@ const LandingSignedInPage = () => {
       <h2>Events</h2>
       <ul>
         {events.map((event) => (
-          <li key={event.id}>{event.name}</li>
+          <EventJoinable key={event.id} event={event} account={account} setAccount={setAccount} />
         ))}
       </ul>
       <h2>User Details</h2>

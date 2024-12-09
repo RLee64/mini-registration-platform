@@ -3,6 +3,7 @@
   background-color: rgb(36, 36, 49);
   color: rgba(255, 255, 255, 0.9);
   --header-height: 60px;
+  --footer-height: 50px;
 }
 
 header {
@@ -24,6 +25,7 @@ header h1 {
 
 main {
   margin-top: var(--header-height);
+  margin-bottom: var(--footer-height);
 }
 
 input {
@@ -43,7 +45,7 @@ input {
 footer {
     width: 100%;
     background-color: rgb(35, 37, 60);
-    height: 50px;
+    height: var(--footer-height);
     position: fixed;
     bottom: 0;
     left: 0;

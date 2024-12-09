@@ -3,7 +3,6 @@ import axios from "axios";
 const baseUrl = "http://localhost:3001/api";
 
 const getConfig = (accessToken) => {
-  console.log(accessToken)
   return { headers: {
     'Authorization': `Bearer ${accessToken}`
   }}
@@ -37,8 +36,13 @@ const authLogin = (loginDetails) => {
 };
 
 const editName = (newName, accessToken) => {
-  const request = axios.put(`${baseUrl}/edit-name`, {newName: newName}, getConfig(accessToken))
+  const request = axios.put(`${baseUrl}/accounts/edit-name`, {newName: newName}, getConfig(accessToken))
   return request.then((response) => response.data)
 }
 
-export default { getAccounts, getEvents, postAccount, postEvent, authLogin, editName };
+const joinEvent = (eventId, accessToken) => {
+  const request = axios.put(`${baseUrl}/accounts/join-event`, {eventId: eventId}, getConfig(accessToken))
+  return request.then((response) => response.data)
+}
+
+export default { getAccounts, getEvents, postAccount, postEvent, authLogin, editName, joinEvent };

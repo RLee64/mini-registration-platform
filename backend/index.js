@@ -14,6 +14,7 @@ let accounts = [
     password:
       "$argon2id$v=19$m=65536,t=3,p=4$y+p3TKlzeluC5OFPjd9iHA$aK2IoM/344DLOzsV8hEwoMLC952vfFYjxHfJoyF/VfQ",
     accessLevel: "admin",
+    joinedEvents: [],
   },
   {
     id: "2",
@@ -22,6 +23,7 @@ let accounts = [
     password:
       "$argon2id$v=19$m=65536,t=3,p=4$y+p3TKlzeluC5OFPjd9iHA$aK2IoM/344DLOzsV8hEwoMLC952vfFYjxHfJoyF/VfQ",
     accessLevel: "member",
+    joinedEvents: [1],
   },
 ];
 
@@ -76,14 +78,13 @@ app.get("/api/accounts", authenticateToken, (request, response) => {
     const returnedDetails = {
       name: personalAccount.name,
       email: personalAccount.email,
+      joinedEvents: personalAccount.joinedEvents,
     };
     return response.json(returnedDetails);
   }
   const returnedAccounts = accounts.map((account) => ({
-    id: account.id,
-    name: account.name,
-    email: account.email,
-    accessLevel: account.accessLevel,
+    ...account,
+    password: null,
   }));
   response.json(returnedAccounts);
 });
@@ -111,6 +112,7 @@ app.post("/api/accounts", async (request, response) => {
   newAccount.id = id;
   newAccount.password = await argon2.hash(newAccount.password);
   newAccount.accessLevel = "member";
+  newAccount.joinedEvents = [];
   accounts = accounts.concat(newAccount);
   response.json(newAccount);
 });
@@ -159,13 +161,26 @@ app.post("/api/auth", async (request, response) => {
   }
 });
 
-app.put("/api/edit-name", authenticateToken, (request, response) => {
+app.put("/api/accounts/edit-name", authenticateToken, (request, response) => {
   accounts = accounts.map((account) =>
     account.id !== request.user.sub
       ? account
       : { ...account, name: request.body.newName }
   );
-  response.json({newName: request.body.newName})
+  response.json({ newName: request.body.newName });
+});
+
+app.put("/api/accounts/join-event", authenticateToken, (request, response) => {
+  if (!events.find((event) => event.id === request.body.eventId)) {
+    return response.sendStatus(404); //event does not exist
+  }
+  personalAccount = accounts.find((account) => account.id === request.user.sub);
+  if (personalAccount.joinedEvents.find((eventId) => eventId === request.body.eventId)) {
+    return response.sendStatus(409); //user has already joined the event
+  }
+  console.log("attempting to join event");
+  personalAccount.joinedEvents.push(request.body.eventId);
+  response.json({id: request.body.eventId});
 });
 
 const PORT = process.env.PORT;

@@ -3,6 +3,7 @@ import { useAtomValue } from "jotai";
 
 import platformApi from "../services/platform-api";
 import { accessTokenAtom } from "../atoms";
+import Account from "../components/Account";
 
 const AdminPage = () => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -92,7 +93,7 @@ const AdminPage = () => {
         <h2>Registered Accounts</h2>
         <ul>
           {accounts.map((account) => (
-            <li key={account.id}>{account.name}</li>
+            <Account key={account.id} account={account} events={events} />
           ))}
         </ul>
       </div>
