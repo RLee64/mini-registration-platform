@@ -207,7 +207,7 @@ app.put("/api/accounts/join-event", authenticateToken, (request, response) => {
     .catch((error) => next(error));
 });
 
-// Ending Middleware
+// Ending middleware
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
