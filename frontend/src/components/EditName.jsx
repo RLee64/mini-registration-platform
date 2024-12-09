@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAtomValue } from "jotai";
 
 import { accessTokenAtom } from "../atoms";
+import platformApi from "../services/platform-api";
 
 const EditName = ({ account, setAccount }) => {
   const [editingName, setEditingName] = useState(false);

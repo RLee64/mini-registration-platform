@@ -23,6 +23,7 @@ const AdminPage = () => {
   useEffect(() => {
     platformApi.getAccounts(accessToken).then((receivedAccounts) => {
       setAccounts(receivedAccounts);
+      console.log(receivedAccounts)
     });
   }, []);
 

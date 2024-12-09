@@ -8,30 +8,9 @@ const connectToMongo = require("./connect-to-mongo");
 require("dotenv").config();
 
 const Event = require("./models/event");
+const Account = require("./models/account");
 
 connectToMongo();
-
-//Hardcoded data for testing (REMOVE LATER)
-let accounts = [
-  {
-    id: "1",
-    name: "Steve",
-    email: "steve@gmail.com",
-    password:
-      "$argon2id$v=19$m=65536,t=3,p=4$y+p3TKlzeluC5OFPjd9iHA$aK2IoM/344DLOzsV8hEwoMLC952vfFYjxHfJoyF/VfQ",
-    accessLevel: "admin",
-    joinedEvents: [],
-  },
-  {
-    id: "2",
-    name: "John Smith",
-    email: "bigplanes@gmail.com",
-    password:
-      "$argon2id$v=19$m=65536,t=3,p=4$y+p3TKlzeluC5OFPjd9iHA$aK2IoM/344DLOzsV8hEwoMLC952vfFYjxHfJoyF/VfQ",
-    accessLevel: "member",
-    joinedEvents: [],
-  },
-];
 
 //Middleware
 //ADD MIDDLEWARE FOR LOGGING REQUESTS
@@ -56,25 +35,32 @@ const authenticateToken = (request, response, next) => {
 
 //ERROR CHECKING NEEDED FOR ALL
 
-//GET ACCOUNTS (ADMIN ONLY)
+//GET ACCOUNT/S
 app.get("/api/accounts", authenticateToken, (request, response) => {
   if (request.user.accessLevel !== "admin") {
-    //Return only the user's account
-    const personalAccount = accounts.find(
-      (account) => account.id === request.user.sub
-    );
-    const returnedDetails = {
-      name: personalAccount.name,
-      email: personalAccount.email,
-      joinedEvents: personalAccount.joinedEvents,
-    };
-    return response.json(returnedDetails);
+    //Return ONLY the user's account
+    Account.findById(request.user.sub).then((account) => {
+      const responseDetails = {
+        name: account.name,
+        email: account.email,
+        joinedEvents: account.joinedEvents,
+      };
+      return response.json(responseDetails);
+    });
+  } else {
+    //Return ALL accounts
+    Account.find({}).then((accounts) => {
+      const returnedAccounts = accounts.map((account) => ({
+        id: account.id,
+        name: account.name,
+        email: account.email,
+        accessLevel: account.accessLevel,
+        joinedEvents: account.joinedEvents,
+      }));
+      console.log(returnedAccounts);
+      response.json(returnedAccounts);
+    });
   }
-  const returnedAccounts = accounts.map((account) => ({
-    ...account,
-    password: null,
-  }));
-  response.json(returnedAccounts);
 });
 
 //GET EVENTS
@@ -86,24 +72,26 @@ app.get("/api/events", (request, response) => {
 
 //REGISTER NEW ACCOUNT
 app.post("/api/accounts", async (request, response) => {
-  //TEMPORARY ID GENERATOR
-  const maxId =
-    accounts.length > 0 ? Math.max(...accounts.map((a) => Number(a.id))) : 0;
-  const id = String(maxId + 1);
+  const body = request.body;
 
-  const newAccount = request.body;
-
-  if (accounts.find((account) => account.email === newAccount.email)) {
+  if (accounts.find((account) => account.email === body.email)) {
     //Duplicate email
     return response.sendStatus(409);
   }
 
-  newAccount.id = id;
-  newAccount.password = await argon2.hash(newAccount.password);
-  newAccount.accessLevel = "member";
-  newAccount.joinedEvents = [];
-  accounts = accounts.concat(newAccount);
-  response.json(newAccount);
+  const hashedPassword = await argon2.hash(body.password);
+
+  const newAccount = new Account({
+    name: body.name,
+    email: body.email.toLowerCase(),
+    password: hashedPassword,
+    accessLevel: "member",
+    joinedEvents: [],
+  });
+
+  newAccount.save().then(() => {
+    response.sendStatus(204);
+  });
 });
 
 //CREATE NEW EVENT (ADMIN ONLY)
@@ -122,66 +110,87 @@ app.post("/api/events", authenticateToken, (request, response) => {
     date: date.toISOString(),
   });
 
-  newEvent.save()
-    .then(savedEvent => {
-      response.json(savedEvent);
-    })
+  newEvent.save().then((savedEvent) => {
+    response.json(savedEvent);
+  });
 });
 
 //LOGIN
-app.post("/api/auth", async (request, response) => {
+app.post("/api/auth", (request, response) => {
   const { email, password } = request.body;
-  const locatedAccount = accounts.find((account) => account.email === email);
-  if (!locatedAccount) {
-    console.log("No email was provided");
-    return response.sendStatus(401);
-  }
 
-  const passwordMatch = await argon2.verify(locatedAccount.password, password);
-  if (passwordMatch) {
-    console.log("Valid login details");
-    const user = {
-      sub: locatedAccount.id,
-      accessLevel: locatedAccount.accessLevel,
-    };
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-    response.status(200).json({
-      accessToken: accessToken,
-      accessLevel: locatedAccount.accessLevel, //Used on client-side to smooth experience
-    });
-  } else {
-    console.log("Invalid login details");
-    response.sendStatus(401);
-  }
+  Account.find({ email: email.toLowerCase() }).then(async (accounts) => {
+    //Could consider case where there are somehow multiple accounts (maybe from manual insertion)
+    if (accounts.length === 0) {
+      console.log("Email is not registered");
+      return response.sendStatus(401); //Maybe make it a 404 response
+    }
+    const locatedAccount = accounts[0];
+    const passwordMatch = await argon2.verify(
+      locatedAccount.password,
+      password
+    );
+    if (passwordMatch) {
+      console.log("Valid login details");
+      //Generating access token
+      const user = {
+        sub: locatedAccount.id,
+        accessLevel: locatedAccount.accessLevel,
+      };
+      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+
+      response.status(200).json({
+        accessToken: accessToken,
+        accessLevel: locatedAccount.accessLevel, //Used on client-side to smooth experience
+      });
+    } else {
+      console.log("Invalid password");
+      response.sendStatus(401);
+    }
+  });
 });
 
+//CHANGE NAME
 app.put("/api/accounts/edit-name", authenticateToken, (request, response) => {
-  accounts = accounts.map((account) =>
-    account.id !== request.user.sub
-      ? account
-      : { ...account, name: request.body.newName }
-  );
-  response.json({ newName: request.body.newName });
+  Account.findByIdAndUpdate(
+    request.user.sub,
+    { name: request.body.newName },
+    { new: true }
+  ).then((updatedAccount) => {
+    console.log(updatedAccount);
+    console.log(updatedAccount.name);
+    response.json({ newName: updatedAccount.name });
+  });
 });
 
+//JOIN EVENT
 app.put("/api/accounts/join-event", authenticateToken, (request, response) => {
+  const eventId = request.body.eventId;
+  const userId = request.user.sub;
+
   Event.find({}).then((events) => {
-    if (!events.find((event) => event.id === request.body.eventId)) {
+    if (!events.find((event) => event.id === eventId)) {
       return response.sendStatus(404); //event does not exist
     }
   });
-  
-  personalAccount = accounts.find((account) => account.id === request.user.sub);
-  if (
-    personalAccount.joinedEvents.find(
-      (eventId) => eventId === request.body.eventId
-    )
-  ) {
-    return response.sendStatus(409); //user has already joined the event
-  }
-  console.log("Attempting to join event");
-  personalAccount.joinedEvents.push(request.body.eventId);
-  response.json({ id: request.body.eventId });
+
+  Account.findById(userId).then((account) => {
+    const alreadyJoined = account.joinedEvents.find(
+      (joinedEventId) => joinedEventId === eventId
+    );
+    if (alreadyJoined) return response.sendStatus(409);
+
+    console.log("Attempting to join event");
+    console.log(eventId)
+    Account.findOneAndUpdate(
+      { _id: userId },
+      { $push: { joinedEvents: eventId } },
+      { new: true, returnDocument: 'after' }
+    ).then((updatedAccount) => {
+      response.json({ joinedEvents: updatedAccount.joinedEvents })
+    }
+    );
+  });
 });
 
 const PORT = process.env.PORT;

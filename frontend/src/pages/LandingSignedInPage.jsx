@@ -5,15 +5,16 @@ import platformApi from "../services/platform-api";
 import { accessTokenAtom } from "../atoms";
 import EditName from "../components/EditName";
 
+//Separate soon
 const EventJoinable = ({event, account, setAccount}) => {
   console.log(account.joinedEvents)
   const accessToken = useAtomValue(accessTokenAtom);
   console.log(accessToken)
   const joinEvent = () => {
-    platformApi.joinEvent(event.id, accessToken).then((joinedEvent) => {
+    platformApi.joinEvent(event.id, accessToken).then((response) => {
       console.log("successful in joining event");
-      console.log(joinedEvent)
-      setAccount({...account, joinedEvents: account.joinedEvents.concat(joinedEvent.id)})
+      console.log(response.joinedEvents)
+      setAccount({...account, joinedEvents: response.joinedEvents})
     });
   };
   return (

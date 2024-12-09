@@ -26,7 +26,7 @@ const SignUpPage = () => {
       password: newAccountPassword,
     };
 
-    platformApi.postAccount(newAccount).then((returnedAccount) => {
+    platformApi.postAccount(newAccount).then(() => {
       clearAccountFields();
       navigate("/login");
     });
