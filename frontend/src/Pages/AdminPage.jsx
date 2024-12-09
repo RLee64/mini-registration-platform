@@ -3,7 +3,9 @@ import { useAtomValue } from "jotai";
 
 import platformApi from "../services/platform-api";
 import { accessTokenAtom } from "../atoms";
+
 import Account from "../components/Account";
+import Event from "../components/Event";
 
 const AdminPage = () => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -27,6 +29,7 @@ const AdminPage = () => {
   useEffect(() => {
     platformApi.getEvents().then((receivedEvents) => {
       setEvents(receivedEvents);
+      console.log(receivedEvents);
     });
   }, []);
   const clearEventFields = () => {
@@ -58,7 +61,7 @@ const AdminPage = () => {
         <h2>Events</h2>
         <ul>
           {events.map((event) => (
-            <li key={event.id}>{event.name}</li>
+            <Event key={event.id} event={event} />
           ))}
         </ul>
       </div>
@@ -84,7 +87,7 @@ const AdminPage = () => {
             id="eventDate"
             value={newEventDate}
             onChange={(event) => setNewEventDate(event.target.value)}
-            type="date"
+            type="datetime-local"
           />
           <button type="submit">Submit</button>
         </form>

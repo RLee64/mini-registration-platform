@@ -1,9 +1,15 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const morgan = require("morgan");
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
+const connectToMongo = require("./connect-to-mongo");
 require("dotenv").config();
+
+const Event = require("./models/event");
+
+connectToMongo();
 
 //Hardcoded data for testing (REMOVE LATER)
 let accounts = [
@@ -23,22 +29,7 @@ let accounts = [
     password:
       "$argon2id$v=19$m=65536,t=3,p=4$y+p3TKlzeluC5OFPjd9iHA$aK2IoM/344DLOzsV8hEwoMLC952vfFYjxHfJoyF/VfQ",
     accessLevel: "member",
-    joinedEvents: [1],
-  },
-];
-
-let events = [
-  {
-    id: 1,
-    name: "Cheese factory visit",
-    description: "We are going to eat so much cheese",
-    date: "my birthday :)",
-  },
-  {
-    id: 2,
-    name: "The singularity",
-    description: "We're going to die'",
-    date: "23/12/26",
+    joinedEvents: [],
   },
 ];
 
@@ -46,15 +37,12 @@ let events = [
 //ADD MIDDLEWARE FOR LOGGING REQUESTS
 app.use(cors());
 app.use(express.json());
+app.use(morgan("tiny"));
 
 const authenticateToken = (request, response, next) => {
   const authHeader = request.headers["authorization"];
-  console.log(authHeader);
   const token = authHeader && authHeader.split(" ")[1];
   if (token == null) return response.sendStatus(401);
-
-  console.log("the token was");
-  console.log(token);
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
     if (error) {
@@ -91,8 +79,9 @@ app.get("/api/accounts", authenticateToken, (request, response) => {
 
 //GET EVENTS
 app.get("/api/events", (request, response) => {
-  //IS VERIFICATION NEEDED?
-  response.json(events);
+  Event.find({}).then((events) => {
+    response.json(events);
+  });
 });
 
 //REGISTER NEW ACCOUNT
@@ -122,15 +111,21 @@ app.post("/api/events", authenticateToken, (request, response) => {
   if (request.user.accessLevel !== "admin") {
     return response.sendStatus(403);
   }
-  //TEMPORARY ID GENERATOR
-  const maxId =
-    events.length > 0 ? Math.max(...events.map((e) => Number(e.id))) : 0;
-  const id = String(maxId + 1);
 
-  const newEvent = request.body;
-  newEvent.id = id;
-  events = events.concat(newEvent);
-  response.json(newEvent);
+  const body = request.body;
+
+  const date = new Date(body.date);
+
+  const newEvent = new Event({
+    name: body.name,
+    description: body.description,
+    date: date.toISOString(),
+  });
+
+  newEvent.save()
+    .then(savedEvent => {
+      response.json(savedEvent);
+    })
 });
 
 //LOGIN
@@ -138,25 +133,24 @@ app.post("/api/auth", async (request, response) => {
   const { email, password } = request.body;
   const locatedAccount = accounts.find((account) => account.email === email);
   if (!locatedAccount) {
-    console.log("No email");
+    console.log("No email was provided");
     return response.sendStatus(401);
   }
 
   const passwordMatch = await argon2.verify(locatedAccount.password, password);
   if (passwordMatch) {
-    console.log("correct stuff");
+    console.log("Valid login details");
     const user = {
       sub: locatedAccount.id,
       accessLevel: locatedAccount.accessLevel,
     };
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-    console.log(accessToken);
     response.status(200).json({
       accessToken: accessToken,
       accessLevel: locatedAccount.accessLevel, //Used on client-side to smooth experience
     });
   } else {
-    console.log("yeah that didn't work");
+    console.log("Invalid login details");
     response.sendStatus(401);
   }
 });
@@ -171,16 +165,23 @@ app.put("/api/accounts/edit-name", authenticateToken, (request, response) => {
 });
 
 app.put("/api/accounts/join-event", authenticateToken, (request, response) => {
-  if (!events.find((event) => event.id === request.body.eventId)) {
-    return response.sendStatus(404); //event does not exist
-  }
+  Event.find({}).then((events) => {
+    if (!events.find((event) => event.id === request.body.eventId)) {
+      return response.sendStatus(404); //event does not exist
+    }
+  });
+  
   personalAccount = accounts.find((account) => account.id === request.user.sub);
-  if (personalAccount.joinedEvents.find((eventId) => eventId === request.body.eventId)) {
+  if (
+    personalAccount.joinedEvents.find(
+      (eventId) => eventId === request.body.eventId
+    )
+  ) {
     return response.sendStatus(409); //user has already joined the event
   }
-  console.log("attempting to join event");
+  console.log("Attempting to join event");
   personalAccount.joinedEvents.push(request.body.eventId);
-  response.json({id: request.body.eventId});
+  response.json({ id: request.body.eventId });
 });
 
 const PORT = process.env.PORT;

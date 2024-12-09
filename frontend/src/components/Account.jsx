@@ -10,7 +10,7 @@ const Account = ({ account, events }) => {
           <ul>
             {account.joinedEvents.map((eventId) => (
               <li key={eventId}>
-                {events?.find((event) => event.id === eventId).name}
+                {events.find((event) => event.id === eventId)?.name}
               </li>
             ))}
           </ul>
