@@ -13,7 +13,6 @@ const LandingSignedOutPage = () => {
 
   return (
     <div>
-      Landing Page (real) - you are signed out
       <h2>Events</h2>
         <ul>
           {events.map((event) => (

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { accessTokenAtom, accessLevelAtom } from "../atoms";
 
+// Button found in header that directs user to login page or allows them to sign out
 const AuthButton = () => {
     const setAccessToken = useSetAtom(accessTokenAtom);
     const [accessLevel, setAccessLevel] = useAtom(accessLevelAtom);

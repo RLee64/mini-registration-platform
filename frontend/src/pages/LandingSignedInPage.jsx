@@ -4,30 +4,7 @@ import { useAtomValue } from "jotai";
 import platformApi from "../services/platform-api";
 import { accessTokenAtom } from "../atoms";
 import EditName from "../components/EditName";
-
-//Separate soon
-const EventJoinable = ({event, account, setAccount}) => {
-  console.log(account.joinedEvents)
-  const accessToken = useAtomValue(accessTokenAtom);
-  console.log(accessToken)
-  const joinEvent = () => {
-    platformApi.joinEvent(event.id, accessToken).then((response) => {
-      console.log("successful in joining event");
-      console.log(response.joinedEvents)
-      setAccount({...account, joinedEvents: response.joinedEvents})
-    });
-  };
-  return (
-    <li>
-      <p>{event.name}</p>
-      {account.joinedEvents?.find((eventId) => eventId === event.id) ? (
-        <label>Joined!</label>
-      ) : (
-        <button onClick={joinEvent}>Join Event</button>
-      )}
-    </li>
-  );
-};
+import EventJoinable from "../components/EventJoinable"
 
 const LandingSignedInPage = () => {
   console.log("refreshing page")
@@ -51,7 +28,6 @@ const LandingSignedInPage = () => {
 
   return (
     <div>
-      Landing Page (real) - you are signed out
       <h2>Events</h2>
       <ul>
         {events.map((event) => (

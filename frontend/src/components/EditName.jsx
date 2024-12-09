@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai";
 import { accessTokenAtom } from "../atoms";
 import platformApi from "../services/platform-api";
 
+// The Component that Allows Account Name Changing
 const EditName = ({ account, setAccount }) => {
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState("");

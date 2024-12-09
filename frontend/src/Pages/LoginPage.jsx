@@ -15,12 +15,11 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  //Removes the display of any the display error message when users start typing in either fields
+  // Removes the display of any the display error message when users start typing in either fields
   useEffect(() => {
     setErrorMessage("");
   }, [loginEmail, loginPassword]);
 
-  //Redirect user to sign-up page
   const toSignUp = () => {
     navigate("/sign-up");
   };

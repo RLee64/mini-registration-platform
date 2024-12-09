@@ -5,7 +5,7 @@ import { accessLevelAtom } from "../atoms";
 import LandingSignedInPage from "../pages/LandingSignedInPage";
 import LandingSignedOutPage from "../pages/LandingSignedOutPage";
 
-//Depending on whether user is signed in or not, display the appropriate page
+// Depending on whether user is signed in or not, display the appropriate page
 const LandingPage = () => {
   const location = useLocation();
   const accessLevel = useAtomValue(accessLevelAtom);

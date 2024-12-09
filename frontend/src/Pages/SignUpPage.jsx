@@ -57,7 +57,6 @@ const SignUpPage = () => {
           onChange={(event) => setNewAccountPassword(event.target.value)}
           type="password"
         />
-        {/*When creating account make sure to redirect back to login page*/}
         <button type="submit">Create Account</button>
       </form>
     </div>
