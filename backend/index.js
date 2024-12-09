@@ -30,14 +30,16 @@ app.get("/api/accounts", authenticateToken, (request, response) => {
   // Response is determined by access level
   if (request.user.accessLevel !== "admin") {
     // Return ONLY the user's account
-    Account.findById(request.user.sub).then((account) => {
-      const responseDetails = {
-        name: account.name,
-        email: account.email,
-        joinedEvents: account.joinedEvents,
-      }.catch((error) => next(error));
-      return response.json(responseDetails);
-    });
+    Account.findById(request.user.sub)
+      .then((account) => {
+        const responseDetails = {
+          name: account.name,
+          email: account.email,
+          joinedEvents: account.joinedEvents,
+        };
+        return response.json(responseDetails);
+      })
+      .catch((error) => next(error));
   } else {
     // Return ALL accounts
     Account.find({})
@@ -65,14 +67,19 @@ app.get("/api/events", (request, response) => {
     .catch((error) => next(error));
 });
 
-// Register a New Accounts
+// Register a New Account
 app.post("/api/accounts", async (request, response) => {
   const body = request.body;
 
-  if (accounts.find((account) => account.email === body.email)) {
-    // Duplicate email found
-    return response.sendStatus(409);
-  }
+  Account.find({ email: body.email.toLowerCase() })
+    .then((accounts) => {
+      // Check if account already exists
+      if (accounts.length > 0) {
+        console.log("Email has already been registered");
+        return response.sendStatus(409);
+      }
+    })
+    .catch((error) => next(error));
 
   // Use argon2 to make password storage more secure
   const hashedPassword = await argon2.hash(body.password);
