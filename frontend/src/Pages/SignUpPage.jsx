@@ -27,22 +27,18 @@ const SignUpPage = () => {
   const createAccount = (event) => {
     event.preventDefault();
 
-    let newErrorMessage = "";
     if (
       !newAccountName ||
       !newAccountEmail ||
       !newAccountPassword ||
       !confirmPassword
     ) {
-      newErrorMessage += "- Please Fill in All Boxes ";
+      setErrorMessage("Please fill in all fields");
+      return
     }
     if (newAccountPassword !== confirmPassword) {
-      newErrorMessage += "- Passwords do not match ";
-    }
-
-    if (newErrorMessage) {
-      setErrorMessage(`ERROR ${newErrorMessage}`);
-      return;
+      setErrorMessage("Passwords do not match");
+      return
     }
 
     console.log("Creating account");
