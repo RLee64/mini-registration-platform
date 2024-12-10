@@ -7,6 +7,23 @@ import { accessTokenAtom } from "../atoms";
 const EventJoinable = ({ event, account, setAccount }) => {
   const accessToken = useAtomValue(accessTokenAtom);
 
+  const eventHolderStyle = {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 50,
+  };
+
+  const eventStyle = {
+    width: "80%",
+  };
+
+  const joinStyle = {
+    width: 125,
+    textAlign: "center",
+
+  }
+
   const joinEvent = () => {
     platformApi.joinEvent(event.id, accessToken).then((response) => {
       console.log("successful in joining event");
@@ -16,15 +33,19 @@ const EventJoinable = ({ event, account, setAccount }) => {
   };
 
   return (
-    <li>
-      <p>{event.name}</p>
+    <li style={eventHolderStyle} className="item">
+      <div style={eventStyle}>
+        <h3>{event.name}</h3>
+        <p>{event.date}</p>
+        <p>{event.description}</p>
+      </div>
       {account.joinedEvents?.find((eventId) => eventId === event.id) ? (
-        <label>Joined!</label>
+        <label style={joinStyle}>Joined!</label>
       ) : (
-        <button onClick={joinEvent}>Join Event</button>
+        <button style={joinStyle} onClick={joinEvent}>Join Event</button>
       )}
     </li>
   );
 };
 
-export default EventJoinable
+export default EventJoinable;

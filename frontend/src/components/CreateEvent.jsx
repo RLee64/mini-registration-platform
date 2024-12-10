@@ -2,9 +2,10 @@ import { useAtomValue } from "jotai";
 import { useState } from "react";
 
 import { accessTokenAtom } from "../atoms";
+import platformApi from "../services/platform-api";
 
 const CreateEvent = ({ events, setEvents }) => {
-  const accessToken = useAtomValue(accessTokenAtom)
+  const accessToken = useAtomValue(accessTokenAtom);
 
   const [newEventName, setNewEventName] = useState("");
   const [newEventDescription, setNewEventDescription] = useState("");
@@ -33,7 +34,7 @@ const CreateEvent = ({ events, setEvents }) => {
   };
 
   return (
-    <>
+    <div>
       <h2>Create Event</h2>
       <form onSubmit={createEvent}>
         <label htmlFor="eventName">Name</label>
@@ -59,7 +60,7 @@ const CreateEvent = ({ events, setEvents }) => {
         />
         <button type="submit">Submit</button>
       </form>
-    </>
+    </div>
   );
 };
 

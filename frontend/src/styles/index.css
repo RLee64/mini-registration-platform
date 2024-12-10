@@ -1,6 +1,8 @@
+/* For styles that are universal between components or have dependencies on a root variable */
+
 :root {
   font-family: Helvetica, Arial, sans-serif;
-  background-color: rgb(36, 36, 49);
+  background-color: rgb(48, 52, 61);
   color: rgba(255, 255, 255, 0.9);
   --header-height: 60px;
   --footer-height: 50px;
@@ -8,24 +10,22 @@
 
 header {
     width: 100%;
-    background-color: rgb(11, 14, 60);
+    background-color: rgb(22, 23, 43);
     height: var(--header-height);
     position: fixed;
     top: 0;
     left: 0;
     display: flex;
     justify-content:space-between;
+    align-items: center;
     box-sizing: border-box;
     padding: 10px;
-}
-
-header h1 {
-  margin-block: 0;
 }
 
 main {
   margin-top: var(--header-height);
   margin-bottom: var(--footer-height);
+  padding: 10px;
 }
 
 input {
@@ -34,17 +34,47 @@ input {
   width: 100%;
 }
 
+ul {
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+
 .form-box {
     width: 80%;
     max-width: 600px;
-    margin: 100px auto 0 auto;
+    margin: 50px auto 0 auto;
     background-color: rgba(255, 255, 255, 0.05);
     padding: 50px;
 }
 
+.item {
+  padding: 5px 20px 5px 20px;
+  background-color: #ffffff22;
+  margin: 15px 0 15px 0;
+}
+
+button {
+  width: 125px;
+  height: 45px;
+  background-color: rgba(74, 31, 145);
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 5px;
+  border-style: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: rgba(94, 46, 172);
+}
+
+button:active{
+  background-color: rgba(52, 19, 105);
+}
+
 footer {
     width: 100%;
-    background-color: rgb(35, 37, 60);
+    background-color: rgb(34, 36, 51);
     height: var(--footer-height);
     position: fixed;
     bottom: 0;

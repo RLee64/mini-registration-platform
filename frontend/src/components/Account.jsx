@@ -1,6 +1,6 @@
 const Account = ({ account, events }) => {
   return (
-    <li>
+    <li className="item">
       <h3>{account.name}</h3>
       <ul>
         <li>ID: {account.id}</li>

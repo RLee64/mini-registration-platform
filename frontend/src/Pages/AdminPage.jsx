@@ -5,8 +5,7 @@ import platformApi from "../services/platform-api";
 import { accessTokenAtom } from "../atoms";
 
 import Account from "../components/Account";
-import Event from "../components/Event";
-import CreateEvent from "../components/CreateEvent";
+import EventAreaAdmin from "../components/EventAreaAdmin";
 
 const AdminPage = () => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -20,7 +19,7 @@ const AdminPage = () => {
   useEffect(() => {
     platformApi.getAccounts(accessToken).then((receivedAccounts) => {
       setAccounts(receivedAccounts);
-      console.log(receivedAccounts)
+      console.log(receivedAccounts);
     });
   }, []);
 
@@ -34,15 +33,7 @@ const AdminPage = () => {
   return (
     <div>
       <h1>Admin Panel</h1>
-      <div>
-        <h2>Events</h2>
-        <ul>
-          {events.map((event) => (
-            <Event key={event.id} event={event} />
-          ))}
-        </ul>
-      </div>
-      <CreateEvent events={events} setEvents={setEvents} />
+      <EventAreaAdmin events={events} setEvents={setEvents} />
       <div>
         <h2>Registered Accounts</h2>
         <ul>
