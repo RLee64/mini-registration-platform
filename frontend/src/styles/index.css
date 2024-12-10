@@ -4,7 +4,7 @@
   font-family: Helvetica, Arial, sans-serif;
   background-color: rgb(48, 52, 61);
   color: rgba(255, 255, 255, 0.9);
-  --header-height: 60px;
+  --header-height: 70px;
   --footer-height: 50px;
 }
 
@@ -19,7 +19,7 @@ header {
     justify-content:space-between;
     align-items: center;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 10px 20px 10px 15px;
 }
 
 main {
@@ -42,9 +42,9 @@ ul {
 .form-box {
     width: 80%;
     max-width: 600px;
-    margin: 50px auto 0 auto;
+    margin: 40px auto 0 auto;
     background-color: rgba(255, 255, 255, 0.05);
-    padding: 50px;
+    padding: 45px;
 }
 
 .item {
@@ -55,7 +55,7 @@ ul {
 
 button {
   width: 125px;
-  height: 45px;
+  height: 40px;
   background-color: rgba(74, 31, 145);
   color: rgba(255, 255, 255, 0.9);
   border-radius: 5px;

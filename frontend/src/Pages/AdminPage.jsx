@@ -13,6 +13,12 @@ const AdminPage = () => {
   const [events, setEvents] = useState([]);
   const [accounts, setAccounts] = useState([]);
 
+  const flexBoxWrapper = {
+    display: "flex",
+    flexDirection: "row",
+    gap: 20,
+  };
+
   /*Currently events and accounts are only called for at the beginning,
   meaning refreshing is currently required to keep track of updates.
   Maybe a potential fix would be nice? But it's not necessary*/
@@ -36,7 +42,7 @@ const AdminPage = () => {
       <EventAreaAdmin events={events} setEvents={setEvents} />
       <div>
         <h2>Registered Accounts</h2>
-        <ul>
+        <ul style={flexBoxWrapper}>
           {accounts.map((account) => (
             <Account key={account.id} account={account} events={events} />
           ))}

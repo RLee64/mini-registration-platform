@@ -68,7 +68,7 @@ const LoginPage = () => {
         <button type="submit">Log In</button>
         <p>Don't have an account?</p>
         <button type="button" onClick={toSignUp}>
-          Create Account
+          Sign Up Now!
         </button>
       </form>
     </div>
