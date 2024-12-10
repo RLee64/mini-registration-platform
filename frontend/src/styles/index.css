@@ -79,4 +79,8 @@ footer {
     position: fixed;
     bottom: 0;
     left: 0;
+    box-sizing: border-box;
+    padding: 15px;
+    display: flex;
+    align-items: center;
 }
