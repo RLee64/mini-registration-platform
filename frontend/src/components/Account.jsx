@@ -1,6 +1,11 @@
 const Account = ({ account, events }) => {
   const accountStyle = {
-    width: "30%",
+    width: "21%",
+    minWidth: 300,
+  };
+
+  const bottomPadding = {
+    paddingBottom: 20,
   };
 
   return (
@@ -13,8 +18,10 @@ const Account = ({ account, events }) => {
         <strong>Email:</strong> {account.email}
       </p>
       {account.joinedEvents.length > 0 ? (
-        <p>
-          <strong>Joined Events:</strong>
+        <div style={bottomPadding}>
+          <p>
+            <strong>Joined Events:</strong>
+          </p>
           <ul>
             {account.joinedEvents.map((eventId) => (
               <li key={eventId}>
@@ -22,7 +29,7 @@ const Account = ({ account, events }) => {
               </li>
             ))}
           </ul>
-        </p>
+        </div>
       ) : (
         <p>No events joined</p>
       )}

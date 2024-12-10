@@ -16,7 +16,8 @@ const AdminPage = () => {
   const flexBoxWrapper = {
     display: "flex",
     flexDirection: "row",
-    gap: 20,
+    flexWrap: "wrap",
+    gap: "0 20px",
   };
 
   /*Currently events and accounts are only called for at the beginning,
