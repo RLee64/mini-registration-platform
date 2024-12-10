@@ -37,9 +37,10 @@ Used to hash passwords (although, usage could definitely be expanded upon to str
 ## Link to Render
 The project's backend is up and running on Render! You can access it using the link, but it can be rather slow at times and there's one fairly big issue (which I've noted below).
 https://nzpmc-mini-registration-platform.onrender.com/
+
 For Admin access use the following:
-email: admin@gmail.com
-password: 1234 (I know, it's so secure)
+- email: admin@gmail.com
+- password: 1234 (I know, it's so secure)
 
 ## A Not-So-Nice Flaw
 When refreshing the site on the backend or manually trying to reach a certain path, the server returns a 404. From what I gather, this is due to the way React works. Since React applications are single page applications with the index.html file, when you try to access an alternate path directly rather than through React Router, the server doesn't have anything to return. Initiating the frontend via the npm run dev command works perfectly fine though, although I'm not sure why.
