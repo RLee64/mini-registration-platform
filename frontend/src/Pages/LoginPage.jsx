@@ -4,6 +4,7 @@ import { useSetAtom } from "jotai";
 
 import platformApi from "../services/platform-api";
 import { accessTokenAtom, accessLevelAtom } from "../atoms";
+import ErrorMessage from "../components/ErrorMessage";
 
 const LoginPage = () => {
   const setAccessToken = useSetAtom(accessTokenAtom);
@@ -20,6 +21,11 @@ const LoginPage = () => {
     setErrorMessage("");
   }, [loginEmail, loginPassword]);
 
+  // Wipes error message when user starts re-entering information
+  useEffect(() => {
+    setErrorMessage(null);
+  }, [loginEmail, loginPassword]);
+
   const toSignUp = () => {
     navigate("/sign-up");
   };
@@ -33,7 +39,7 @@ const LoginPage = () => {
     platformApi
       .authLogin(loginAccount)
       .then((response) => {
-        console.log(response.accessLevel)
+        console.log(response.accessLevel);
         setAccessToken(response.accessToken);
         setAccessLevel(response.accessLevel);
         setLoginEmail("");
@@ -41,15 +47,19 @@ const LoginPage = () => {
         navigate("/");
       })
       .catch((error) => {
-        console.log("ERROR WITH LOGIN");
         console.log(error);
+        if (error.status === 401) {
+          setErrorMessage("Invalid email or password")
+        }
+        else {
+          setErrorMessage("Error authenticating request, please try again later")
+        }
       });
   };
 
   return (
     <div className="form-box">
       <h2>Log In</h2>
-      <p>{errorMessage}</p>
       <form onSubmit={login}>
         <label htmlFor="loginEmail">Email</label>
         <input
@@ -65,6 +75,7 @@ const LoginPage = () => {
           onChange={(event) => setLoginPassword(event.target.value)}
           type="password"
         />
+        <ErrorMessage message={errorMessage} />
         <button type="submit">Log In</button>
         <p>Don't have an account?</p>
         <button type="button" onClick={toSignUp}>
