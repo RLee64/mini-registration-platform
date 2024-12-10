@@ -34,11 +34,11 @@ const SignUpPage = () => {
       !confirmPassword
     ) {
       setErrorMessage("Please fill in all fields");
-      return
+      return;
     }
     if (newAccountPassword !== confirmPassword) {
       setErrorMessage("Passwords do not match");
-      return
+      return;
     }
 
     console.log("Creating account");
@@ -49,10 +49,16 @@ const SignUpPage = () => {
       password: newAccountPassword,
     };
 
-    platformApi.postAccount(newAccount).then(() => {
-      clearAccountFields();
-      navigate("/login");
-    });
+    platformApi
+      .postAccount(newAccount)
+      .then(() => {
+        clearAccountFields();
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage("Error - Event could not be created");
+      });
   };
 
   return (
