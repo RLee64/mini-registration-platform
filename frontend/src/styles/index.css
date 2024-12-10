@@ -25,12 +25,12 @@ header {
 main {
   margin-top: var(--header-height);
   margin-bottom: var(--footer-height);
-  padding: 10px;
+  padding: 15px;
 }
 
 input {
   display: block;
-  margin: 25px auto 25px auto;
+  margin: 10px auto 35px auto;
   width: 100%;
   box-sizing: border-box;
 }
