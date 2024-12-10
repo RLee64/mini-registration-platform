@@ -1,9 +1,18 @@
 const mongoose = require("mongoose");
 
 const eventSchema = new mongoose.Schema({
-  name: String,
-  description: String,
-  date: Date,
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
 });
 
 eventSchema.set("toJSON", {
@@ -11,7 +20,7 @@ eventSchema.set("toJSON", {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
-    returnedObject.date = new Date(returnedObject.date).toLocaleString()
+    returnedObject.date = new Date(returnedObject.date).toLocaleString();
   },
 });
 

@@ -1,11 +1,20 @@
 const mongoose = require("mongoose");
 
 const accountSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  password: String,
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
   accessLevel: String,
-  joinedEvents: [String]
+  joinedEvents: [String],
 });
 
 accountSchema.set("toJSON", {

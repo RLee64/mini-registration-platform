@@ -205,7 +205,7 @@ app.put("/api/accounts/join-event", authenticateToken, (request, response) => {
       return Account.findOneAndUpdate(
         { _id: userId },
         { $push: { joinedEvents: eventId } },
-        { new: true, returnDocument: "after" }
+        { new: true, returnDocument: "after", runValidators: true, context: 'query' }
       );
     })
     .then((updatedAccount) => {
