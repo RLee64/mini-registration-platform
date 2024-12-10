@@ -21,6 +21,7 @@ const errorHandler = require("./middleware/error-handler");
 connectToMongo();
 
 // Initial Middleware
+app.use(express.static('dist'))
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
@@ -51,7 +52,6 @@ app.get("/api/accounts", authenticateToken, (request, response) => {
           accessLevel: account.accessLevel,
           joinedEvents: account.joinedEvents,
         }));
-        console.log(returnedAccounts);
         response.json(returnedAccounts);
       })
       .catch((error) => next(error));
@@ -168,8 +168,6 @@ app.put("/api/accounts/edit-name", authenticateToken, (request, response) => {
     { new: true }
   )
     .then((updatedAccount) => {
-      console.log(updatedAccount);
-      console.log(updatedAccount.name);
       response.json({ newName: updatedAccount.name });
     })
     .catch((error) => next(error));
@@ -197,9 +195,6 @@ app.put("/api/accounts/join-event", authenticateToken, (request, response) => {
         (joinedEventId) => joinedEventId === eventId
       );
       if (alreadyJoined) return response.sendStatus(409);
-
-      console.log("Attempting to join event");
-      console.log(eventId);
 
       // Add event to user account
       return Account.findOneAndUpdate(
