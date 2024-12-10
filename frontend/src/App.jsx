@@ -7,6 +7,7 @@ import LandingDirectory from "./components/LandingDirectory";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import AdminDirectory from "./components/AdminDirectory";
+import NotFound from "./components/NotFound";
 
 import { accessLevelAtom, accessTokenAtom } from "./atoms";
 
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="login" element={<LoginPage />} />
         <Route path="sign-up" element={<SignUpPage />} />
         <Route path="admin" element={<AdminDirectory />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
