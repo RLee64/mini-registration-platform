@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import platformApi from "../services/platform-api";
+import ErrorMessage from "../components/ErrorMessage";
 
 const SignUpPage = () => {
   const [newAccountName, setNewAccountName] = useState("");
   const [newAccountEmail, setNewAccountEmail] = useState("");
   const [newAccountPassword, setNewAccountPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const navigate = useNavigate();
+
+  // Wipes error message when user starts re-entering information
+  useEffect(() => {
+    setErrorMessage(null);
+  }, [newAccountName, newAccountEmail, newAccountPassword, confirmPassword]);
 
   const clearAccountFields = () => {
     setNewAccountName("");
@@ -18,6 +26,25 @@ const SignUpPage = () => {
 
   const createAccount = (event) => {
     event.preventDefault();
+
+    let newErrorMessage = "";
+    if (
+      !newAccountName ||
+      !newAccountEmail ||
+      !newAccountPassword ||
+      !confirmPassword
+    ) {
+      newErrorMessage += "- Please Fill in All Boxes ";
+    }
+    if (newAccountPassword !== confirmPassword) {
+      newErrorMessage += "- Passwords do not match ";
+    }
+
+    if (newErrorMessage) {
+      setErrorMessage(`ERROR ${newErrorMessage}`);
+      return;
+    }
+
     console.log("Creating account");
 
     const newAccount = {
@@ -57,6 +84,14 @@ const SignUpPage = () => {
           onChange={(event) => setNewAccountPassword(event.target.value)}
           type="password"
         />
+        <label htmlFor="confirmPassword">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(event) => setConfirmPassword(event.target.value)}
+          type="password"
+        />
+        <ErrorMessage message={errorMessage} />
         <button type="submit">Create Account</button>
       </form>
     </div>
