@@ -21,15 +21,17 @@ const EventJoinable = ({ event, account, setAccount }) => {
   const joinStyle = {
     width: 125,
     textAlign: "center",
-
-  }
+  };
 
   const joinEvent = () => {
-    platformApi.joinEvent(event.id, accessToken).then((response) => {
-      console.log("successful in joining event");
-      console.log(response.joinedEvents);
-      setAccount({ ...account, joinedEvents: response.joinedEvents });
-    });
+    platformApi
+      .joinEvent(event.id, accessToken)
+      .then((response) => {
+        setAccount({ ...account, joinedEvents: response.joinedEvents });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -42,7 +44,9 @@ const EventJoinable = ({ event, account, setAccount }) => {
       {account.joinedEvents?.find((eventId) => eventId === event.id) ? (
         <label style={joinStyle}>Joined!</label>
       ) : (
-        <button style={joinStyle} onClick={joinEvent}>Join Event</button>
+        <button style={joinStyle} onClick={joinEvent}>
+          Join Event
+        </button>
       )}
     </li>
   );

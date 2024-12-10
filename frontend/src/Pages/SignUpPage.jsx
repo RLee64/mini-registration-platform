@@ -41,8 +41,6 @@ const SignUpPage = () => {
       return;
     }
 
-    console.log("Creating account");
-
     const newAccount = {
       name: newAccountName,
       email: newAccountEmail,

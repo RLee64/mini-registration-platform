@@ -7,7 +7,6 @@ import EditName from "../components/EditName";
 import EventJoinable from "../components/EventJoinable";
 
 const LandingSignedInPage = () => {
-  console.log("refreshing page");
   const accessToken = useAtomValue(accessTokenAtom);
 
   const [events, setEvents] = useState([]);
@@ -29,7 +28,6 @@ const LandingSignedInPage = () => {
 
   useEffect(() => {
     platformApi.getEvents().then((receivedEvents) => {
-      console.log(receivedEvents);
       setEvents(receivedEvents);
     });
   }, [account]);

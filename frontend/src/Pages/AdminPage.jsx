@@ -26,14 +26,12 @@ const AdminPage = () => {
   useEffect(() => {
     platformApi.getAccounts(accessToken).then((receivedAccounts) => {
       setAccounts(receivedAccounts);
-      console.log(receivedAccounts);
     });
   }, []);
 
   useEffect(() => {
     platformApi.getEvents().then((receivedEvents) => {
       setEvents(receivedEvents);
-      console.log(receivedEvents);
     });
   }, []);
 

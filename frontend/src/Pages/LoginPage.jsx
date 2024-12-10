@@ -39,7 +39,6 @@ const LoginPage = () => {
     platformApi
       .authLogin(loginAccount)
       .then((response) => {
-        console.log(response.accessLevel);
         setAccessToken(response.accessToken);
         setAccessLevel(response.accessLevel);
         setLoginEmail("");

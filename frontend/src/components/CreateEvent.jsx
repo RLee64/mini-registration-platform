@@ -36,7 +36,6 @@ const CreateEvent = ({ events, setEvents }) => {
 
   const createEvent = (event) => {
     event.preventDefault();
-    console.log("Creating event");
 
     const today = new Date();
     const eventDate = new Date(newEventDate);
