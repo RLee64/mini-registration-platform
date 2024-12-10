@@ -4,7 +4,7 @@ import { useSetAtom } from "jotai";
 
 import platformApi from "../services/platform-api";
 import { accessTokenAtom, accessLevelAtom } from "../atoms";
-import ErrorMessage from "../components/ErrorMessage";
+import Message from "../components/Message";
 
 const LoginPage = () => {
   const setAccessToken = useSetAtom(accessTokenAtom);
@@ -75,7 +75,7 @@ const LoginPage = () => {
           onChange={(event) => setLoginPassword(event.target.value)}
           type="password"
         />
-        <ErrorMessage message={errorMessage} />
+        <Message message={errorMessage} type="error" />
         <button type="submit">Log In</button>
         <p>Don't have an account?</p>
         <button type="button" onClick={toSignUp}>

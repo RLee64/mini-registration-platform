@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { accessTokenAtom } from "../atoms";
 import platformApi from "../services/platform-api";
-import ErrorMessage from "./ErrorMessage";
+import Message from "./Message";
 
 const CreateEvent = ({ events, setEvents }) => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -12,6 +12,7 @@ const CreateEvent = ({ events, setEvents }) => {
   const [newEventDescription, setNewEventDescription] = useState("");
   const [newEventDate, setNewEventDate] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const descriptionStyle = {
     width: "100%",
@@ -58,6 +59,10 @@ const CreateEvent = ({ events, setEvents }) => {
     platformApi.postEvent(newEvent, accessToken).then((returnedEvent) => {
       setEvents(events.concat(returnedEvent));
       clearEventFields();
+      setSuccessMessage("Event Posted!")
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, "3000");
     }).catch((error) => {
       console.log(error)
       setErrorMessage("Error - Event could not be created")
@@ -91,7 +96,8 @@ const CreateEvent = ({ events, setEvents }) => {
           onChange={(event) => setNewEventDate(event.target.value)}
           type="datetime-local"
         />
-        <ErrorMessage message={errorMessage} />
+        <Message message={errorMessage} type="error" />
+        <Message message={successMessage} type="confirm" />
         <button type="submit">Submit</button>
       </form>
     </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import platformApi from "../services/platform-api";
-import ErrorMessage from "../components/ErrorMessage";
+import Message from "../components/Message";
 
 const SignUpPage = () => {
   const [newAccountName, setNewAccountName] = useState("");
@@ -93,7 +93,7 @@ const SignUpPage = () => {
           onChange={(event) => setConfirmPassword(event.target.value)}
           type="password"
         />
-        <ErrorMessage message={errorMessage} />
+        <Message message={errorMessage} type="error" />
         <button type="submit">Create Account</button>
       </form>
     </div>
