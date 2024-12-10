@@ -4,7 +4,8 @@ const ErrorMessage = ({message}) => {
     padding: 10,
     borderRadius: 10,
     boxSizing: "border-box",
-    width: "100%"
+    width: "100%",
+    marginBottom: 30
   };
 
   return message ? <p style={errorStyling}>{message}</p> : null;
