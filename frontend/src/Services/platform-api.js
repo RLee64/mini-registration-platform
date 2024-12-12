@@ -20,7 +20,7 @@ const getEvents = () => {
 };
 
 const postAccount = (newAccount) => {
-  const request = axios.post(`${baseUrl}/accounts`, newAccount);
+  const request = axios.post(`${baseUrl}/accounts/student`, newAccount);
   return request.then((response) => response.data);
 };
 
