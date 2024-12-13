@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -20,7 +19,7 @@ public class AccountService {
         String hashedPassword = passwordEncoder.encode(account.getPassword());
         account.setPassword(hashedPassword);
 
-        // Save account
+        // Save account to MongoDB
         return accountRepository.save(account);
     }
 }

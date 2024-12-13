@@ -4,6 +4,7 @@ import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.models.Student;
 import com.nzpmc.backend.repository.AccountRepository;
 import com.nzpmc.backend.services.AccountService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import java.util.List;
 public class AccountController {
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
     @Autowired
     private AccountService accountService;
 
@@ -27,14 +28,14 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Object> createStudent(@RequestBody Student studentData) {
+    @PostMapping
+    public ResponseEntity<Object> registerAccount(@RequestBody Student student) {
         // Check if email is already in use
-        if (accountRepository.findByEmailIgnoreCase(studentData.getEmail()) != null) {
+        if (accountRepository.findByEmailIgnoreCase(student.getEmail()) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use");
         }
 
-        Account createdAccount = accountService.registerAccount(studentData);
+        Account createdAccount = accountService.registerAccount(student);
 
         // Remove password before sending result back
         createdAccount.setPassword(null);
