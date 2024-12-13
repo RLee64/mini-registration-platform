@@ -55,7 +55,7 @@ const SignUpPage = () => {
       })
       .catch((error) => {
         console.log(error);
-        setErrorMessage("Error - Event could not be created");
+        setErrorMessage("Error - Account could not be created");
       });
   };
 
