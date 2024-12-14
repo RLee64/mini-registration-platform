@@ -17,7 +17,7 @@ const Account = ({ account, events }) => {
       <p>
         <strong>Email:</strong> {account.email}
       </p>
-      {account.joinedEvents.length > 0 ? (
+      {account.joinedEvents?.length > 0 ? (
         <div style={bottomPadding}>
           <p>
             <strong>Joined Events:</strong>

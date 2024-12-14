@@ -52,7 +52,7 @@ const CreateEvent = ({ events, setEvents }) => {
     const newEvent = {
       name: newEventName,
       description: newEventDescription,
-      date: newEventDate,
+      date: new Date(newEventDate).toISOString(),
     };
 
     platformApi.postEvent(newEvent, accessToken).then((returnedEvent) => {

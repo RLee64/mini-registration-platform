@@ -43,7 +43,7 @@ const AdminPage = () => {
         <h2>Registered Accounts</h2>
         <ul style={flexBoxWrapper}>
           {accounts.map((account) => (
-            <Account key={account.id} account={account} events={events} />
+            <Account key={account.email} account={account} events={events} />
           ))}
         </ul>
       </div>

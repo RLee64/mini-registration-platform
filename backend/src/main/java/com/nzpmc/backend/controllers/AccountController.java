@@ -31,7 +31,7 @@ public class AccountController {
     @GetMapping
     public ResponseEntity<Object> getAllAccounts() {
         List<Account> accounts = accountRepository.findAll();
-        return ResponseEntity.ok(accounts);
+        return ResponseEntity.status(HttpStatus.OK).body(accounts);
     }
 
     @PostMapping("/register")
@@ -62,7 +62,7 @@ public class AccountController {
 
         AccessDetails accessDetails = new AccessDetails (token, account.getAccessLevel());
 
-        return ResponseEntity.ok(accessDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(accessDetails);
     }
 
     @PutMapping("/edit-name")
