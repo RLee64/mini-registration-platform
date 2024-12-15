@@ -146,6 +146,10 @@ public class AccountController {
             // Join event
             student.addJoinedEvent(eventName.name());
             accountService.updateAccount(student);
+
+            // Remove password before sending result back
+            student.setPassword(null);
+
             return ResponseEntity.status(HttpStatus.OK).body(student);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account is not a student");
