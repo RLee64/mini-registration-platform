@@ -80,10 +80,12 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
 
+        // Create token details and generate an access token
         JWTDetails jwtDetails = new JWTDetails(account.getEmail(), account.getAccessLevel());
 
         String token = jwtService.createToken(jwtDetails);
 
+        // Return access token and access level
         AccessDetails accessDetails = new AccessDetails(token, account.getAccessLevel());
 
         return ResponseEntity.status(HttpStatus.OK).body(accessDetails);
@@ -92,18 +94,23 @@ public class AccountController {
     // USER AUTH REQUIRED
     @PutMapping("/edit-name")
     public ResponseEntity<Object> editName(@RequestHeader("Authorization") String authorizationHeader, @RequestBody AccountName accountName) {
+        // Get token details
         JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
 
+        // If no details returned, then token did not exist
         if (jwtDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
 
+        // Find account based on token
         Account account = accountRepository.findByEmailIgnoreCase(jwtDetails.email());
 
+        // If account doesn't exist then token is also invalid
         if (account == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
 
+        // Update name
         account.setName(accountName.name());
         accountService.updateAccount(account);
 
