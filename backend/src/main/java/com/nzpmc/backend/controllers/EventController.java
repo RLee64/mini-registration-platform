@@ -6,7 +6,6 @@ import com.nzpmc.backend.models.Event;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.EventService;
 import com.nzpmc.backend.services.JWTService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +18,15 @@ import java.util.Objects;
 @RequestMapping("/api/events")
 public class EventController {
 
-    @Autowired
-    private JWTService jwtService;
+    private final JWTService jwtService;
+    private final EventService eventService;
+    private final AccountService accountService;
 
-    @Autowired
-    private EventService eventService;
-
-    @Autowired
-    private AccountService accountService;
+    public EventController(JWTService jwtService, EventService eventService, AccountService accountService) {
+        this.jwtService = jwtService;
+        this.eventService = eventService;
+        this.accountService = accountService;
+    }
 
     @GetMapping
     public ResponseEntity<Object> getAllEvents() {

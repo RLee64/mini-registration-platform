@@ -5,7 +5,6 @@ import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.models.Student;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.JWTService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +17,13 @@ import java.util.Objects;
 @RequestMapping("/api/accounts")
 public class AccountController {
 
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private JWTService jwtService;
+    private final AccountService accountService;
+    private final JWTService jwtService;
+
+    public AccountController(AccountService accountService, JWTService jwtService) {
+        this.accountService = accountService;
+        this.jwtService = jwtService;
+    }
 
     // If admin, return all accounts, otherwise only return an individual's
     @GetMapping

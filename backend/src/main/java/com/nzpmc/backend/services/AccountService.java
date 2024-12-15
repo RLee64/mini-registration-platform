@@ -3,7 +3,6 @@ package com.nzpmc.backend.services;
 import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.dtos.LoginDetails;
 import com.nzpmc.backend.repository.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +10,14 @@ import java.util.List;
 
 @Service
 public class AccountService {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AccountRepository accountRepository;
+
+    public AccountService(PasswordEncoder passwordEncoder, AccountRepository accountRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.accountRepository = accountRepository;
+    }
 
     public Account findAccount(String email) {
         return accountRepository.findByEmailIgnoreCase(email);
