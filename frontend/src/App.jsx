@@ -17,9 +17,16 @@ const App = () => {
 
   // Save Access Level and Access Token to session storage whenever their state changes
   useEffect(() => {
-    sessionStorage.setItem("accessLevel", accessLevel);
-    sessionStorage.setItem("accessToken", accessToken);
-  }, [accessLevel, accessToken]);
+    accessLevel
+      ? sessionStorage.setItem("accessLevel", accessLevel)
+      : sessionStorage.removeItem("accessLevel");
+  }, [accessLevel]);
+
+  useEffect(() => {
+    accessToken
+      ? sessionStorage.setItem("accessToken", accessToken)
+      : sessionStorage.removeItem("accessToken");
+  }, [accessToken]);
 
   return (
     <Routes>
