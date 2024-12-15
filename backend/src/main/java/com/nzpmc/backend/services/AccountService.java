@@ -34,7 +34,7 @@ public class AccountService {
         return correctPassword ? foundAccount : null;
     }
 
-    public Account updateAccount(Account account) {
-        return accountRepository.save(account);
+    public void updateAccount(Account account) {
+        accountRepository.save(account);
     }
 }
