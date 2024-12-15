@@ -40,8 +40,8 @@ const editName = (newName, accessToken) => {
   return request.then((response) => response.data)
 }
 
-const joinEvent = (eventId, accessToken) => {
-  const request = axios.put(`${baseUrl}/accounts/join-event`, {eventId: eventId}, getConfig(accessToken))
+const joinEvent = (eventName, accessToken) => {
+  const request = axios.put(`${baseUrl}/accounts/join-event`, {name: eventName}, getConfig(accessToken))
   return request.then((response) => response.data)
 }
 

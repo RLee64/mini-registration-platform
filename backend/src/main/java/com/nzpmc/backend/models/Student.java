@@ -5,9 +5,9 @@ import java.util.List;
 
 public class Student extends Account {
 
-    private List<Event> joinedEvents = new ArrayList<>();
+    private List<String> joinedEvents = new ArrayList<>();
 
-    public Student(String email, String name, String password, List<Event> joinedEvents) {
+    public Student(String email, String name, String password, List<String> joinedEvents) {
         super(email, name, password, "student");
         if (joinedEvents != null) {
             this.joinedEvents = joinedEvents;
@@ -21,11 +21,15 @@ public class Student extends Account {
                 "} " + super.toString();
     }
 
-    public List<Event> getJoinedEvents() {
+    public List<String> getJoinedEvents() {
         return joinedEvents;
     }
 
-    public void setJoinedEvents(List<Event> joinedEvents) {
+    public void setJoinedEvents(List<String> joinedEvents) {
         this.joinedEvents = joinedEvents;
+    }
+
+    public void addJoinedEvent(String event) {
+        joinedEvents.add(event);
     }
 }

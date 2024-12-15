@@ -1,10 +1,7 @@
 package com.nzpmc.backend.controllers;
 
-import com.nzpmc.backend.dtos.AccessDetails;
-import com.nzpmc.backend.dtos.JWTDetails;
-import com.nzpmc.backend.dtos.NameObject;
+import com.nzpmc.backend.dtos.*;
 import com.nzpmc.backend.models.Account;
-import com.nzpmc.backend.dtos.LoginDetails;
 import com.nzpmc.backend.models.Student;
 import com.nzpmc.backend.repository.AccountRepository;
 import com.nzpmc.backend.services.AccountService;
@@ -15,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin
 @RestController
@@ -28,9 +26,35 @@ public class AccountController {
     @Autowired
     private JWTService jwtService;
 
+    // If admin, return all accounts, otherwise only return an individual's
     @GetMapping
-    public ResponseEntity<Object> getAllAccounts() {
+    public ResponseEntity<Object> getAllAccounts(@RequestHeader("Authorization") String authorizationHeader) {
+        // Get token details
+        JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
+
+        // If no details returned, then token did not exist
+        if (jwtDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+        // Find account based on token
+        Account account = accountRepository.findByEmailIgnoreCase(jwtDetails.email());
+
+        // If account doesn't exist then token is also invalid
+        if (account == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+        // If token details OR account lacks admin permissions, only return the user
+        if (!Objects.equals(jwtDetails.accessLevel(), "admin") || !Objects.equals(account.getAccessLevel(), "admin")) {
+            // Remove password before sending result back
+            account.setPassword(null);
+            return ResponseEntity.status(HttpStatus.OK).body(account);
+        }
+
+        // Remove passwords before sending result back
         List<Account> accounts = accountRepository.findAll();
+        accounts.forEach(a -> a.setPassword(null));
         return ResponseEntity.status(HttpStatus.OK).body(accounts);
     }
 
@@ -60,38 +84,64 @@ public class AccountController {
 
         String token = jwtService.createToken(jwtDetails);
 
-        AccessDetails accessDetails = new AccessDetails (token, account.getAccessLevel());
+        AccessDetails accessDetails = new AccessDetails(token, account.getAccessLevel());
 
         return ResponseEntity.status(HttpStatus.OK).body(accessDetails);
     }
 
+    // USER AUTH REQUIRED
     @PutMapping("/edit-name")
-    public ResponseEntity<Object> editName(@RequestHeader("Authorization") String authorizationHeader, @RequestBody NameObject nameObject) {
-        String accessToken = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
-
-        System.out.println("Token received: " + accessToken);
-
-        JWTDetails jwtDetails = jwtService.validateToken(accessToken);
-
-        System.out.println("Details received");
+    public ResponseEntity<Object> editName(@RequestHeader("Authorization") String authorizationHeader, @RequestBody AccountName accountName) {
+        JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
 
         if (jwtDetails == null) {
-            System.out.println("Invalid token 1");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
 
         Account account = accountRepository.findByEmailIgnoreCase(jwtDetails.email());
 
         if (account == null) {
-            System.out.println("Invalid token 2");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
 
-        System.out.println(nameObject);
-
-        account.setName(nameObject.name());
+        account.setName(accountName.name());
         accountService.updateAccount(account);
 
-        return ResponseEntity.ok(nameObject);
+        return ResponseEntity.ok(accountName);
+    }
+
+    // STUDENT AUTH REQUIRED
+    @PutMapping("/join-event")
+    public ResponseEntity<Object> joinEvent(@RequestHeader("Authorization") String authorizationHeader, @RequestBody EventName eventName) {
+        // Get token details
+        JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
+
+        // If no details returned, then token did not exist
+        if (jwtDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+        // Find account based on token
+        Account account = accountRepository.findByEmailIgnoreCase(jwtDetails.email());
+
+        // If account doesn't exist then token is also invalid
+        if (account == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+
+        // Check if account is a student
+        if (account instanceof Student student) {
+            // Check if already joined event
+            if (student.getJoinedEvents().contains(eventName.name())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Already joined event");
+            }
+
+            // Join event
+            student.addJoinedEvent(eventName.name());
+            accountService.updateAccount(student);
+            return ResponseEntity.status(HttpStatus.OK).body(student);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account is not a student");
+        }
     }
 }

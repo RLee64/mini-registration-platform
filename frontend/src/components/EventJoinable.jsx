@@ -25,7 +25,7 @@ const EventJoinable = ({ event, account, setAccount }) => {
 
   const joinEvent = () => {
     platformApi
-      .joinEvent(event.id, accessToken)
+      .joinEvent(event.name, accessToken)
       .then((response) => {
         setAccount({ ...account, joinedEvents: response.joinedEvents });
       })
@@ -41,7 +41,7 @@ const EventJoinable = ({ event, account, setAccount }) => {
         <p>{event.date}</p>
         <p>{event.description}</p>
       </div>
-      {account.joinedEvents?.find((eventId) => eventId === event.id) ? (
+      {account.joinedEvents?.find((eventName) => eventName === event.name) ? (
         <label style={joinStyle}>Joined!</label>
       ) : (
         <button style={joinStyle} onClick={joinEvent}>

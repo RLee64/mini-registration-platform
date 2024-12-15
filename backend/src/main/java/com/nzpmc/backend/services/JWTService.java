@@ -36,7 +36,9 @@ public class JWTService {
                 .compact();
     }
 
-    public JWTDetails validateToken(String accessToken) {
+    public JWTDetails validateToken(String authorizationHeader) {
+        String accessToken = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
+
         try {
             Claims claims = Jwts
                     .parser()
