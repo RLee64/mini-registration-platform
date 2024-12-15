@@ -3,8 +3,8 @@ package com.nzpmc.backend.controllers;
 import com.nzpmc.backend.dtos.JWTDetails;
 import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.models.Event;
-import com.nzpmc.backend.repository.AccountRepository;
-import com.nzpmc.backend.repository.EventRepository;
+import com.nzpmc.backend.services.AccountService;
+import com.nzpmc.backend.services.EventService;
 import com.nzpmc.backend.services.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,16 +20,18 @@ import java.util.Objects;
 public class EventController {
 
     @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private EventRepository eventRepository;
-    @Autowired
     private JWTService jwtService;
+
+    @Autowired
+    private EventService eventService;
+
+    @Autowired
+    private AccountService accountService;
 
     @GetMapping
     public ResponseEntity<Object> getAllEvents() {
         // No check necessary, any user can see receive this regardless of auth
-        List<Event> events = eventRepository.findAll();
+        List<Event> events = eventService.getAllEvents();
         return ResponseEntity.ok(events);
     }
 
@@ -45,7 +47,7 @@ public class EventController {
         }
 
         // Find account based on token
-        Account account = accountRepository.findByEmailIgnoreCase(jwtDetails.email());
+        Account account = accountService.findAccount(jwtDetails.email());
 
         // If account doesn't exist then token is also invalid
         if (account == null) {
@@ -58,12 +60,12 @@ public class EventController {
         }
 
         // Check if event already exists in database
-        if (eventRepository.existsByName(event.getName())) {
+        if (eventService.findEvent(event.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Event already exists");
         }
 
         // Save and return newly created event
-        Event createdEvent = eventRepository.save(event);
+        Event createdEvent = eventService.createEvent(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEvent);
     }
 }

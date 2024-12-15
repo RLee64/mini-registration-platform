@@ -3,7 +3,6 @@ package com.nzpmc.backend.controllers;
 import com.nzpmc.backend.dtos.*;
 import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.models.Student;
-import com.nzpmc.backend.repository.AccountRepository;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,6 @@ import java.util.Objects;
 @RequestMapping("/api/accounts")
 public class AccountController {
 
-    @Autowired
-    private AccountRepository accountRepository;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -38,7 +35,7 @@ public class AccountController {
         }
 
         // Find account based on token
-        Account account = accountRepository.findByEmailIgnoreCase(jwtDetails.email());
+        Account account = accountService.findAccount(jwtDetails.email());
 
         // If account doesn't exist then token is also invalid
         if (account == null) {
@@ -53,7 +50,7 @@ public class AccountController {
         }
 
         // Remove passwords before sending result back
-        List<Account> accounts = accountRepository.findAll();
+        List<Account> accounts = accountService.findAllAccounts();
         accounts.forEach(a -> a.setPassword(null));
         return ResponseEntity.status(HttpStatus.OK).body(accounts);
     }
@@ -61,7 +58,7 @@ public class AccountController {
     @PostMapping("/register")
     public ResponseEntity<Object> registerAccount(@RequestBody Student student) {
         // Check if email is already in use
-        if (accountRepository.findByEmailIgnoreCase(student.getEmail()) != null) {
+        if (accountService.findAccount(student.getEmail()) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use");
         }
 
@@ -103,7 +100,7 @@ public class AccountController {
         }
 
         // Find account based on token
-        Account account = accountRepository.findByEmailIgnoreCase(jwtDetails.email());
+        Account account = accountService.findAccount(jwtDetails.email());
 
         // If account doesn't exist then token is also invalid
         if (account == null) {
@@ -129,7 +126,7 @@ public class AccountController {
         }
 
         // Find account based on token
-        Account account = accountRepository.findByEmailIgnoreCase(jwtDetails.email());
+        Account account = accountService.findAccount(jwtDetails.email());
 
         // If account doesn't exist then token is also invalid
         if (account == null) {
