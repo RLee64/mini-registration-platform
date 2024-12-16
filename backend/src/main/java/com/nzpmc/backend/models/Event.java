@@ -1,5 +1,8 @@
 package com.nzpmc.backend.models;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,7 +12,10 @@ import java.util.Date;
 public class Event {
     @Id
     private String name;
+    @NotBlank(message = "Description cannot be blank")
     private String description;
+    @Future(message = "Date must be in the future")
+    @NotNull(message = "Date cannot be null")
     private Date date;
 
     public Event(String name, String description, Date date) {

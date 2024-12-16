@@ -6,6 +6,7 @@ import com.nzpmc.backend.models.Event;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.EventService;
 import com.nzpmc.backend.services.JWTService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class EventController {
 
     // ADMIN AUTH REQUIRED
     @PostMapping
-    public ResponseEntity<Object> createEvent(@RequestHeader("Authorization") String authorizationHeader, @RequestBody Event event) {
+    public ResponseEntity<Object> createEvent(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody Event event) {
         // Get token details
         JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
 

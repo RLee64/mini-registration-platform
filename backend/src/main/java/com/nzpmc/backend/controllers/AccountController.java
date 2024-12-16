@@ -5,6 +5,7 @@ import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.models.Student;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.JWTService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> registerAccount(@RequestBody Student student) {
+    public ResponseEntity<Object> registerAccount(@Valid @RequestBody Student student) {
         // Check if email is already in use
         if (accountService.findAccount(student.getEmail()) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use");
@@ -92,7 +93,7 @@ public class AccountController {
 
     // USER AUTH REQUIRED
     @PutMapping("/edit-name")
-    public ResponseEntity<Object> editName(@RequestHeader("Authorization") String authorizationHeader, @RequestBody AccountName accountName) {
+    public ResponseEntity<Object> editName(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody AccountName accountName) {
         // Get token details
         JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
 
@@ -118,7 +119,7 @@ public class AccountController {
 
     // STUDENT AUTH REQUIRED
     @PutMapping("/join-event")
-    public ResponseEntity<Object> joinEvent(@RequestHeader("Authorization") String authorizationHeader, @RequestBody EventName eventName) {
+    public ResponseEntity<Object> joinEvent(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody EventName eventName) {
         // Get token details
         JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
 

@@ -1,4 +1,6 @@
 package com.nzpmc.backend.dtos;
 
-public record EventName(String name) {
+import jakarta.validation.constraints.NotBlank;
+
+public record EventName(@NotBlank(message="Event name cannot be blank") String name) {
 }

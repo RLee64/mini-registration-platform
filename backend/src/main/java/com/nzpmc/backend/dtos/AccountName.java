@@ -1,4 +1,6 @@
 package com.nzpmc.backend.dtos;
 
-public record AccountName(String name) {
+import jakarta.validation.constraints.NotBlank;
+
+public record AccountName(@NotBlank(message = "Name cannot be blank") String name) {
 }
