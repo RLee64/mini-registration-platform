@@ -41,32 +41,38 @@ const CreateEvent = ({ events, setEvents }) => {
     const eventDate = new Date(newEventDate);
 
     if (!newEventName || !newEventDescription || !newEventDate) {
-      setErrorMessage("Please fill in all fields")
-      return
+      setErrorMessage("Please fill in all fields");
+      return;
+    }
+    if (events.find((event) => event.name === newEventName)) {
+      setErrorMessage("An event with this name already exists");
+      return;
     }
     if (eventDate < today) {
-      setErrorMessage("Chosen date is in the past")
-      return
+      setErrorMessage("Chosen date is in the past");
+      return;
     }
 
     const newEvent = {
       name: newEventName,
       description: newEventDescription,
-      date: newEventDate,
+      date: new Date(newEventDate).toISOString(),
     };
 
-    platformApi.postEvent(newEvent, accessToken).then((returnedEvent) => {
-      setEvents(events.concat(returnedEvent));
-      clearEventFields();
-      setSuccessMessage("Event Posted!")
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, "3000");
-    }).catch((error) => {
-      console.log(error)
-      setErrorMessage("Error - Event could not be created")
-    }
-    );
+    platformApi
+      .postEvent(newEvent, accessToken)
+      .then((returnedEvent) => {
+        setEvents(events.concat(returnedEvent));
+        clearEventFields();
+        setSuccessMessage("Event Posted!");
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, "3000");
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrorMessage("Error - Event could not be created");
+      });
   };
 
   return (
@@ -88,7 +94,7 @@ const CreateEvent = ({ events, setEvents }) => {
           onChange={(event) => setNewEventDescription(event.target.value)}
           rows="4"
         ></textarea>
-        <label id="eventDate">Date</label>
+        <label htmlFor="eventDate">Date</label>
         <input
           id="eventDate"
           value={newEventDate}

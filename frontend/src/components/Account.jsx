@@ -12,20 +12,17 @@ const Account = ({ account, events }) => {
     <li className="item" style={accountStyle}>
       <h3>{account.name}</h3>
       <p>
-        <strong>ID:</strong> {account.id}
-      </p>
-      <p>
         <strong>Email:</strong> {account.email}
       </p>
-      {account.joinedEvents.length > 0 ? (
+      {account.joinedEvents?.length > 0 ? (
         <div style={bottomPadding}>
           <p>
             <strong>Joined Events:</strong>
           </p>
           <ul>
-            {account.joinedEvents.map((eventId) => (
-              <li key={eventId}>
-                - {events.find((event) => event.id === eventId)?.name}
+            {account.joinedEvents.map((eventName) => (
+              <li key={eventName}>
+                - {eventName}
               </li>
             ))}
           </ul>

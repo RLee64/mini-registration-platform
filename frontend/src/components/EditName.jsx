@@ -34,7 +34,7 @@ const EditName = ({ account, setAccount }) => {
     platformApi
       .editName(newName, accessToken)
       .then((response) => {
-        setAccount({ ...account, name: response.newName });
+        setAccount({ ...account, name: response.name });
         setNewName("");
         setSuccessMessage("Successful Name Change!")
         setTimeout(() => {

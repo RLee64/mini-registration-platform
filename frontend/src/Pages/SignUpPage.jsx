@@ -55,7 +55,12 @@ const SignUpPage = () => {
       })
       .catch((error) => {
         console.log(error);
-        setErrorMessage("Error - Event could not be created");
+        if (error.response.status === 409) {
+          setErrorMessage("An account with this email already exists")
+        }
+        else {
+          setErrorMessage("Error - Account could not be created");
+        }
       });
   };
 

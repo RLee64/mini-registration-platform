@@ -22,7 +22,7 @@ const EventAreaAdmin = ({ events, setEvents }) => {
         <h2>Events</h2>
         <ul>
           {events.map((event) => (
-            <Event key={event.id} event={event} />
+            <Event key={event.name} event={event} />
           ))}
         </ul>
       </div>

@@ -45,7 +45,7 @@ const LandingSignedInPage = () => {
         <ul>
           {events.map((event) => (
             <EventJoinable
-              key={event.id}
+              key={event.name}
               event={event}
               account={account}
               setAccount={setAccount}

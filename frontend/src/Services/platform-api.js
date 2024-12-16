@@ -20,7 +20,7 @@ const getEvents = () => {
 };
 
 const postAccount = (newAccount) => {
-  const request = axios.post(`${baseUrl}/accounts`, newAccount);
+  const request = axios.post(`${baseUrl}/accounts/register`, newAccount);
   return request.then((response) => response.data);
 };
 
@@ -31,17 +31,17 @@ const postEvent = (newEvent, accessToken) => {
 };
 
 const authLogin = (loginDetails) => {
-  const request = axios.post(`${baseUrl}/auth`, loginDetails);
+  const request = axios.post(`${baseUrl}/accounts/auth`, loginDetails);
   return request.then((response) => response.data);
 };
 
 const editName = (newName, accessToken) => {
-  const request = axios.put(`${baseUrl}/accounts/edit-name`, {newName: newName}, getConfig(accessToken))
+  const request = axios.put(`${baseUrl}/accounts/edit-name`, {name: newName}, getConfig(accessToken))
   return request.then((response) => response.data)
 }
 
-const joinEvent = (eventId, accessToken) => {
-  const request = axios.put(`${baseUrl}/accounts/join-event`, {eventId: eventId}, getConfig(accessToken))
+const joinEvent = (eventName, accessToken) => {
+  const request = axios.put(`${baseUrl}/accounts/join-event`, {name: eventName}, getConfig(accessToken))
   return request.then((response) => response.data)
 }
 
