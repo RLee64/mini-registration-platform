@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Account {
     @Id
     @Email(message = "Not a valid email address")
+    @NotBlank(message = "Email cannot be blank")
     private String email;
     @NotBlank(message = "Name cannot be blank")
     private String name;

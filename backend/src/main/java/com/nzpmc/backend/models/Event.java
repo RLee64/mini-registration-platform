@@ -11,6 +11,7 @@ import java.util.Date;
 @Document("event")
 public class Event {
     @Id
+    @NotBlank(message = "Name cannot be blank")
     private String name;
     @NotBlank(message = "Description cannot be blank")
     private String description;
