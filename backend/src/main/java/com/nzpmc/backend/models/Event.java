@@ -18,6 +18,7 @@ public class Event {
     @Future(message = "Date must be in the future")
     @NotNull(message = "Date cannot be null")
     private Date date;
+    private String competitionId;
 
     public Event(String name, String description, Date date) {
         this.name = name;
@@ -54,7 +55,9 @@ public class Event {
         return date.toString();
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    public void setDate(Date date) {this.date = date; }
+
+    public String getCompetitionId() { return competitionId; }
+
+    public void setCompetitionId(String competitionId) { this.competitionId = competitionId; }
 }
