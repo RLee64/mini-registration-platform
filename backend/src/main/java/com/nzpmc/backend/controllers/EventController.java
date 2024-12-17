@@ -1,5 +1,6 @@
 package com.nzpmc.backend.controllers;
 
+import com.nzpmc.backend.dtos.AuthObjects;
 import com.nzpmc.backend.dtos.JWTDetails;
 import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.models.Event;
@@ -39,26 +40,17 @@ public class EventController {
     // ADMIN AUTH REQUIRED
     @PostMapping
     public ResponseEntity<Object> createEvent(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody Event event) {
-        // Get token details
-        JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
+        // Run authorization
+        AuthObjects authObjects = accountService.authenticateAdmin(authorizationHeader);
 
-        // If no details returned, then token did not exist
-        if (jwtDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        // Check if any errors were found
+        if (authObjects.getResponseEntity() != null) {
+            return authObjects.getResponseEntity();
         }
 
-        // Find account based on token
-        Account account = accountService.findAccount(jwtDetails.email());
-
-        // If account doesn't exist then token is also invalid
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-
-        // If token details OR account lacks admin permissions, deny access
-        if (!Objects.equals(jwtDetails.accessLevel(), "admin") || !Objects.equals(account.getAccessLevel(), "admin")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
-        }
+        // Destructure object
+        Account account = authObjects.getAccount();
+        JWTDetails jwtDetails = authObjects.getJwtDetails();
 
         // Check if event already exists in database
         if (eventService.findEvent(event.getName())) {

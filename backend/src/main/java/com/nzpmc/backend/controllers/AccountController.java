@@ -29,21 +29,17 @@ public class AccountController {
     // If admin, return all accounts, otherwise only return an individual's
     @GetMapping
     public ResponseEntity<Object> getAllAccounts(@RequestHeader("Authorization") String authorizationHeader) {
-        // Get token details
-        JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
+        // Run authorization
+        AuthObjects authObjects = accountService.authenticateAccount(authorizationHeader);
 
-        // If no details returned, then token did not exist
-        if (jwtDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        // Check if any errors were found
+        if (authObjects.getResponseEntity() != null) {
+            return authObjects.getResponseEntity();
         }
 
-        // Find account based on token
-        Account account = accountService.findAccount(jwtDetails.email());
-
-        // If account doesn't exist then token is also invalid
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
+        // Destructure object
+        Account account = authObjects.getAccount();
+        JWTDetails jwtDetails = authObjects.getJwtDetails();
 
         // If token details OR account lacks admin permissions, only return the user
         if (!Objects.equals(jwtDetails.accessLevel(), "admin") || !Objects.equals(account.getAccessLevel(), "admin")) {
@@ -75,7 +71,7 @@ public class AccountController {
 
     @PostMapping("/auth")
     public ResponseEntity<Object> authenticateAccount(@RequestBody LoginDetails loginDetails) {
-        Account account = accountService.authenticateAccount(loginDetails);
+        Account account = accountService.authenticateLogin(loginDetails);
         if (account == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
@@ -94,21 +90,17 @@ public class AccountController {
     // USER AUTH REQUIRED
     @PutMapping("/edit-name")
     public ResponseEntity<Object> editName(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody AccountName accountName) {
-        // Get token details
-        JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
+        // Run authorization
+        AuthObjects authObjects = accountService.authenticateAccount(authorizationHeader);
 
-        // If no details returned, then token did not exist
-        if (jwtDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        // Check if any errors were found
+        if (authObjects.getResponseEntity() != null) {
+            return authObjects.getResponseEntity();
         }
 
-        // Find account based on token
-        Account account = accountService.findAccount(jwtDetails.email());
-
-        // If account doesn't exist then token is also invalid
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
+        // Destructure object
+        Account account = authObjects.getAccount();
+        JWTDetails jwtDetails = authObjects.getJwtDetails();
 
         // Update name
         account.setName(accountName.name());
@@ -120,21 +112,17 @@ public class AccountController {
     // STUDENT AUTH REQUIRED
     @PutMapping("/join-event")
     public ResponseEntity<Object> joinEvent(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody EventName eventName) {
-        // Get token details
-        JWTDetails jwtDetails = jwtService.validateToken(authorizationHeader);
+        // Run authorization
+        AuthObjects authObjects = accountService.authenticateAccount(authorizationHeader);
 
-        // If no details returned, then token did not exist
-        if (jwtDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        // Check if any errors were found
+        if (authObjects.getResponseEntity() != null) {
+            return authObjects.getResponseEntity();
         }
 
-        // Find account based on token
-        Account account = accountService.findAccount(jwtDetails.email());
-
-        // If account doesn't exist then token is also invalid
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
+        // Destructure object
+        Account account = authObjects.getAccount();
+        JWTDetails jwtDetails = authObjects.getJwtDetails();
 
         // Check if account is a student
         if (account instanceof Student student) {

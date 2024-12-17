@@ -2,21 +2,27 @@ package com.nzpmc.backend.services;
 
 import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.dtos.LoginDetails;
+import com.nzpmc.backend.dtos.AuthObjects;
 import com.nzpmc.backend.repository.AccountRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AccountService {
 
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
+    private final JWTService jwtService;
 
-    public AccountService(PasswordEncoder passwordEncoder, AccountRepository accountRepository) {
+    public AccountService(PasswordEncoder passwordEncoder, AccountRepository accountRepository, JWTService jwtService) {
         this.passwordEncoder = passwordEncoder;
         this.accountRepository = accountRepository;
+        this.jwtService = jwtService;
     }
 
     public Account findAccount(String email) {
@@ -36,7 +42,7 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public Account authenticateAccount(LoginDetails loginDetails) {
+    public Account authenticateLogin(LoginDetails loginDetails) {
         Account foundAccount = accountRepository.findByEmailIgnoreCase(loginDetails.email());
         if (foundAccount == null) {
             return null;
@@ -44,6 +50,45 @@ public class AccountService {
         boolean correctPassword = passwordEncoder.matches(loginDetails.password(), foundAccount.getPassword());
 
         return correctPassword ? foundAccount : null;
+    }
+
+    public AuthObjects authenticateAccount(String authorizationHeader) {
+        // Instantiate
+        AuthObjects authObjects = new AuthObjects(null, null, null);
+
+        // Get token details
+        authObjects.setJwtDetails(jwtService.validateToken(authorizationHeader));
+
+        // If no details returned, then token did not exist
+        if (authObjects.getJwtDetails() == null) {
+            authObjects.setResponseEntity(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token"));
+            return authObjects;
+        }
+
+        // Find account based on token
+        authObjects.setAccount(findAccount(authObjects.getJwtDetails().email()));
+
+        // If account doesn't exist then token is also invalid
+        if (authObjects.getAccount() == null) {
+            authObjects.setResponseEntity(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token"));
+        }
+
+        return authObjects;
+    }
+
+    public AuthObjects authenticateAdmin(String authorizationHeader) {
+        // Run basic authorization checks
+        AuthObjects authObjects = authenticateAccount(authorizationHeader);
+        if (authObjects.getResponseEntity() != null) {
+            return authObjects;
+        }
+
+        // If token details OR account lacks admin permissions, deny access
+        if (!Objects.equals(authObjects.getJwtDetails().accessLevel(), "admin") || !Objects.equals(authObjects.getAccount().getAccessLevel(), "admin")) {
+            authObjects.setResponseEntity(ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied"));
+        }
+
+        return authObjects;
     }
 
     public void updateAccount(Account account) {
