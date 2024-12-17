@@ -26,11 +26,19 @@ public class AccountService {
     }
 
     public Account findAccount(String email) {
-        return accountRepository.findByEmailIgnoreCase(email);
+        Account account = accountRepository.findByEmailIgnoreCase(email);
+
+        // Remove password for security
+        account.setPassword(null);
+        return account;
     }
 
     public List<Account> findAllAccounts() {
-        return accountRepository.findAll();
+        List<Account> accounts = accountRepository.findAll();
+
+        // Remove passwords for security
+        accounts.forEach(a -> a.setPassword(null));
+        return accounts;
     }
 
     public Account registerAccount(Account account) {
@@ -39,7 +47,11 @@ public class AccountService {
         account.setPassword(hashedPassword);
 
         // Save account to MongoDB
-        return accountRepository.save(account);
+        Account createdAccount = accountRepository.save(account);
+
+        // Remove password for security
+        createdAccount.setPassword(null);
+        return createdAccount;
     }
 
     public Account authenticateLogin(LoginDetails loginDetails) {
@@ -48,6 +60,9 @@ public class AccountService {
             return null;
         }
         boolean correctPassword = passwordEncoder.matches(loginDetails.password(), foundAccount.getPassword());
+
+        // Remove password for security
+        foundAccount.setPassword(null);
 
         return correctPassword ? foundAccount : null;
     }

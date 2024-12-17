@@ -43,14 +43,12 @@ public class AccountController {
 
         // If token details OR account lacks admin permissions, only return the user
         if (!Objects.equals(jwtDetails.accessLevel(), "admin") || !Objects.equals(account.getAccessLevel(), "admin")) {
-            // Remove password before sending result back
-            account.setPassword(null);
             return ResponseEntity.status(HttpStatus.OK).body(account);
         }
 
         // Remove passwords before sending result back
         List<Account> accounts = accountService.findAllAccounts();
-        accounts.forEach(a -> a.setPassword(null));
+
         return ResponseEntity.status(HttpStatus.OK).body(accounts);
     }
 
@@ -62,9 +60,6 @@ public class AccountController {
         }
 
         Account createdAccount = accountService.registerAccount(student);
-
-        // Remove password before sending result back
-        createdAccount.setPassword(null);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAccount);
     }
@@ -100,7 +95,6 @@ public class AccountController {
 
         // Destructure object
         Account account = authObjects.getAccount();
-        JWTDetails jwtDetails = authObjects.getJwtDetails();
 
         // Update name
         account.setName(accountName.name());
@@ -122,7 +116,6 @@ public class AccountController {
 
         // Destructure object
         Account account = authObjects.getAccount();
-        JWTDetails jwtDetails = authObjects.getJwtDetails();
 
         // Check if account is a student
         if (account instanceof Student student) {
@@ -134,9 +127,6 @@ public class AccountController {
             // Join event
             student.addJoinedEvent(eventName.name());
             accountService.updateAccount(student);
-
-            // Remove password before sending result back
-            student.setPassword(null);
 
             return ResponseEntity.status(HttpStatus.OK).body(student);
         } else {
