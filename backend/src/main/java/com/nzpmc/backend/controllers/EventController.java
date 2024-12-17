@@ -69,4 +69,10 @@ public class EventController {
         Event createdEvent = eventService.createEvent(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEvent);
     }
+
+    // LINK TO COMPETITION ID (PUT REQUEST WITH ADMIN AUTH REQUIRED)
+
+    // MARK REQUEST (GET REQUEST WITH ADMIN AUTH REQUIRED)
+
+    // GET REQUEST TO START COMPETITION
 }
