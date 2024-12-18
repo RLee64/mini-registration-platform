@@ -1,8 +1,6 @@
 package com.nzpmc.backend.controllers;
 
 import com.nzpmc.backend.dtos.AuthObjects;
-import com.nzpmc.backend.dtos.JWTDetails;
-import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.models.Event;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.EventService;
@@ -13,19 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/api/events")
 public class EventController {
 
-    private final JWTService jwtService;
     private final EventService eventService;
     private final AccountService accountService;
 
-    public EventController(JWTService jwtService, EventService eventService, AccountService accountService) {
-        this.jwtService = jwtService;
+    public EventController(EventService eventService, AccountService accountService) {
         this.eventService = eventService;
         this.accountService = accountService;
     }
@@ -48,12 +43,8 @@ public class EventController {
             return authObjects.getResponseEntity();
         }
 
-        // Destructure object
-        Account account = authObjects.getAccount();
-        JWTDetails jwtDetails = authObjects.getJwtDetails();
-
         // Check if event already exists in database
-        if (eventService.findEvent(event.getName())) {
+        if (eventService.eventExists(event.getName())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Event already exists");
         }
 

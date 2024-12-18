@@ -1,9 +1,10 @@
 package com.nzpmc.backend.repository;
 
-import com.nzpmc.backend.models.Event;
+import com.nzpmc.backend.models.Competition;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CompetitionRepository extends MongoRepository<Event, String> {
+public interface CompetitionRepository extends MongoRepository<Competition, String> {
+    Boolean existsByTitleIgnoreCase(String title);
 }

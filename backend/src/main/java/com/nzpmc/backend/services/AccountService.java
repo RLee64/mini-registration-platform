@@ -68,7 +68,7 @@ public class AccountService {
     }
 
     public AuthObjects authenticateAccount(String authorizationHeader) {
-        // Instantiate
+        // Instantiate objects needed for authorization
         AuthObjects authObjects = new AuthObjects(null, null, null);
 
         // Get token details

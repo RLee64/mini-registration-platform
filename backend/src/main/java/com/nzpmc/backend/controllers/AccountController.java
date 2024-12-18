@@ -46,7 +46,6 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.OK).body(account);
         }
 
-        // Remove passwords before sending result back
         List<Account> accounts = accountService.findAllAccounts();
 
         return ResponseEntity.status(HttpStatus.OK).body(accounts);

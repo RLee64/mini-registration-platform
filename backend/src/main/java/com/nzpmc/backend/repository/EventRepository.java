@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EventRepository extends MongoRepository<Event, String> {
-    boolean existsByName(String name);
+    boolean existsByNameIgnoreCase(String name);
 }

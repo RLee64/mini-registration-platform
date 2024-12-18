@@ -15,8 +15,8 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public boolean findEvent(String name) {
-        return eventRepository.existsByName(name);
+    public boolean eventExists(String name) {
+        return eventRepository.existsByNameIgnoreCase(name);
     }
 
     public List<Event> getAllEvents() {
