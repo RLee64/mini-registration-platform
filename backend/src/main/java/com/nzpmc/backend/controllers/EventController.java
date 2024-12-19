@@ -4,7 +4,6 @@ import com.nzpmc.backend.dtos.AuthObjects;
 import com.nzpmc.backend.models.Event;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.EventService;
-import com.nzpmc.backend.services.JWTService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

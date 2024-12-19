@@ -1,9 +1,7 @@
 package com.nzpmc.backend.services;
 
 import com.nzpmc.backend.models.Competition;
-import com.nzpmc.backend.repository.AccountRepository;
 import com.nzpmc.backend.repository.CompetitionRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -2,7 +2,6 @@ package com.nzpmc.backend.controllers;
 
 import com.nzpmc.backend.dtos.AuthObjects;
 import com.nzpmc.backend.models.Competition;
-import com.nzpmc.backend.models.Event;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.CompetitionService;
 import jakarta.validation.Valid;
