@@ -19,7 +19,11 @@ public class EventService {
         return eventRepository.existsByNameIgnoreCase(name);
     }
 
-    public List<Event> getAllEvents() {
+    public Event findEvent(String name) {
+        return eventRepository.findByNameIgnoreCase(name);
+    }
+
+    public List<Event> findAllEvents() {
         return eventRepository.findAll();
     }
 

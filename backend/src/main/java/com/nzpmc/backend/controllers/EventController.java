@@ -1,6 +1,7 @@
 package com.nzpmc.backend.controllers;
 
 import com.nzpmc.backend.dtos.AuthObjects;
+import com.nzpmc.backend.dtos.CompetitionLinkDetails;
 import com.nzpmc.backend.models.Event;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.CompetitionService;
@@ -19,16 +20,18 @@ public class EventController {
 
     private final EventService eventService;
     private final AccountService accountService;
+    private final CompetitionService competitionService;
 
-    public EventController(EventService eventService, AccountService accountService) {
+    public EventController(EventService eventService, AccountService accountService, CompetitionService competitionService) {
         this.eventService = eventService;
         this.accountService = accountService;
+        this.competitionService = competitionService;
     }
 
     @GetMapping
     public ResponseEntity<Object> getAllEvents() {
         // No check necessary, any user can see receive this regardless of auth
-        List<Event> events = eventService.getAllEvents();
+        List<Event> events = eventService.findAllEvents();
         return ResponseEntity.ok(events);
     }
 
@@ -53,7 +56,38 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEvent);
     }
 
-    // LINK TO COMPETITION ID (PUT REQUEST WITH ADMIN AUTH REQUIRED)
+    // ADMIN AUTH REQUIRED
+    @PutMapping("/link-Competition")
+    public ResponseEntity<Object> linkCompetition(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody CompetitionLinkDetails competitionLinkDetails) {
+        // Run authorization
+        AuthObjects authObjects = accountService.authenticateAdmin(authorizationHeader);
+
+        // Check if any errors were found
+        if (authObjects.getResponseEntity() != null) {
+            return authObjects.getResponseEntity();
+        }
+
+        // Destructure object
+        String competitionTitle = competitionLinkDetails.competitionTitle();
+        String eventName = competitionLinkDetails.eventName();
+
+        // Ensure competition exists
+        if (!competitionService.competitionExists(competitionTitle)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Competition does not exist");
+        }
+
+        // Find event and ensure it exists
+        Event event = eventService.findEvent(eventName);
+
+        if (event == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event does not exist");
+        }
+
+        // Update and return the event
+        event.setCompetitionId(competitionTitle);
+        eventService.saveEvent(event);
+        return ResponseEntity.status(HttpStatus.CREATED).body(event);
+    }
 
     // MARK REQUEST (GET REQUEST WITH ADMIN AUTH REQUIRED)
 
