@@ -26,7 +26,7 @@ public class AccountController {
         this.jwtService = jwtService;
     }
 
-    // If admin, return all accounts, otherwise only return an individual's
+    // If admin, return all accounts, otherwise only return the individual's
     @GetMapping
     public ResponseEntity<Object> getAllAccounts(@RequestHeader("Authorization") String authorizationHeader) {
         // Run authorization
@@ -97,7 +97,7 @@ public class AccountController {
 
         // Update name
         account.setName(accountName.name());
-        accountService.updateAccount(account);
+        accountService.saveAccount(account);
 
         return ResponseEntity.ok(accountName);
     }
@@ -125,7 +125,7 @@ public class AccountController {
 
             // Join event
             student.addJoinedEvent(eventName.name());
-            accountService.updateAccount(student);
+            accountService.saveAccount(student);
 
             return ResponseEntity.status(HttpStatus.OK).body(student);
         } else {

@@ -57,7 +57,7 @@ public class CompetitionController {
         }
 
         // Save and return newly created competition
-        Competition createdCompetition = competitionService.createCompetition(competition);
+        Competition createdCompetition = competitionService.saveCompetition(competition);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCompetition);
     }
 }

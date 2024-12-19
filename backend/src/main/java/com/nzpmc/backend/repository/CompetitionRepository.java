@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompetitionRepository extends MongoRepository<Competition, String> {
     Boolean existsByTitleIgnoreCase(String title);
+    Competition findByTitleIgnoreCase(String title);
 }

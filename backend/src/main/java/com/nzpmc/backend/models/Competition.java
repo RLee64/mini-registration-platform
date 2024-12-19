@@ -33,4 +33,8 @@ public class Competition {
     public void setQuestionIds(List<String> questionIds) {
         this.questionIds = questionIds;
     }
+
+    public void addQuestionId(String questionId) {
+        this.questionIds.add(questionId);
+    }
 }
