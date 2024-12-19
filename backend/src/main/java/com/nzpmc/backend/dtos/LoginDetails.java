@@ -1,4 +1,7 @@
 package com.nzpmc.backend.dtos;
 
-public record LoginDetails(String email, String password) {
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginDetails(@NotBlank(message = "Email cannot be blank") String email,
+                           @NotBlank(message = "Password cannot be blank") String password) {
 }

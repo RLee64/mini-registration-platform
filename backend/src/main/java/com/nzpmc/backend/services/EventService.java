@@ -23,7 +23,7 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public Event createEvent(Event event) {
+    public Event saveEvent(Event event) {
         return eventRepository.save(event);
     }
 }

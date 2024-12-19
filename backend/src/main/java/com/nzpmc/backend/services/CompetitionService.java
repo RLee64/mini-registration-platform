@@ -19,11 +19,15 @@ public class CompetitionService {
         return competitionRepository.existsByTitleIgnoreCase(title);
     }
 
+    public Competition findCompetition(String title) {
+        return competitionRepository.findByTitleIgnoreCase(title);
+    }
+
     public List<Competition> findAllCompetitions() {
         return competitionRepository.findAll();
     }
 
-    public Competition createCompetition(Competition competition) {
+    public Competition saveCompetition(Competition competition) {
         return competitionRepository.save(competition);
     }
 }

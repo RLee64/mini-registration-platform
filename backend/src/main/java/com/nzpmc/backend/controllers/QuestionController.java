@@ -29,7 +29,7 @@ public class QuestionController {
 
     // ADMIN AUTH REQUIRED
     @PostMapping
-    public ResponseEntity<Object> createQuestion(@RequestHeader("Authorization") String authorizationHeader, @RequestBody QuestionRequest questionRequest) {
+    public ResponseEntity<Object> createQuestion(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody QuestionRequest questionRequest) {
         // Run authorization
         AuthObjects authObjects = accountService.authenticateAdmin(authorizationHeader);
 

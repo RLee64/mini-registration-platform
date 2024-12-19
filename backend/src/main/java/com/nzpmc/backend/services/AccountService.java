@@ -106,7 +106,8 @@ public class AccountService {
         return authObjects;
     }
 
-    public void updateAccount(Account account) {
+    // DO NOT USE WHEN CREATING NEW ACCOUNTS (use registerAccount instead)
+    public void saveAccount(Account account) {
         accountRepository.save(account);
     }
 }

@@ -3,6 +3,7 @@ package com.nzpmc.backend.controllers;
 import com.nzpmc.backend.dtos.AuthObjects;
 import com.nzpmc.backend.models.Event;
 import com.nzpmc.backend.services.AccountService;
+import com.nzpmc.backend.services.CompetitionService;
 import com.nzpmc.backend.services.EventService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -48,7 +49,7 @@ public class EventController {
         }
 
         // Save and return newly created event
-        Event createdEvent = eventService.createEvent(event);
+        Event createdEvent = eventService.saveEvent(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEvent);
     }
 

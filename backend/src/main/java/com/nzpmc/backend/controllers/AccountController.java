@@ -64,7 +64,7 @@ public class AccountController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<Object> authenticateAccount(@RequestBody LoginDetails loginDetails) {
+    public ResponseEntity<Object> authenticateAccount(@Valid @RequestBody LoginDetails loginDetails) {
         Account account = accountService.authenticateLogin(loginDetails);
         if (account == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
