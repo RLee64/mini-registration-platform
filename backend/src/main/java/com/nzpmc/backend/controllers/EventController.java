@@ -1,23 +1,19 @@
 package com.nzpmc.backend.controllers;
 
-import com.nzpmc.backend.dtos.AuthObjects;
-import com.nzpmc.backend.dtos.CompetitionData;
-import com.nzpmc.backend.dtos.CompetitionLinkDetails;
-import com.nzpmc.backend.dtos.EventName;
-import com.nzpmc.backend.models.Account;
+import com.nzpmc.backend.dtos.*;
+import com.nzpmc.backend.models.Attempt;
 import com.nzpmc.backend.models.Competition;
 import com.nzpmc.backend.models.Event;
 import com.nzpmc.backend.models.Question;
-import com.nzpmc.backend.services.AccountService;
-import com.nzpmc.backend.services.CompetitionService;
-import com.nzpmc.backend.services.EventService;
-import com.nzpmc.backend.services.QuestionService;
+import com.nzpmc.backend.services.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -27,12 +23,14 @@ public class EventController {
     private final EventService eventService;
     private final AccountService accountService;
     private final CompetitionService competitionService;
+    private final AttemptService attemptService;
     private final QuestionService questionService;
 
-    public EventController(EventService eventService, AccountService accountService, CompetitionService competitionService, QuestionService questionService) {
+    public EventController(EventService eventService, AccountService accountService, CompetitionService competitionService, AttemptService attemptService, QuestionService questionService) {
         this.eventService = eventService;
         this.accountService = accountService;
         this.competitionService = competitionService;
+        this.attemptService = attemptService;
         this.questionService = questionService;
     }
 
@@ -97,7 +95,6 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    // GET REQUEST TO START COMPETITION
     @GetMapping("/competition/start")
     public ResponseEntity<Object> startCompetition(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody EventName eventName) {
         // Run authorization
@@ -112,7 +109,7 @@ public class EventController {
         Event event = eventService.findEvent(eventName.name());
 
         if (event == null || event.getCompetitionId() == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event does not exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event does not exist or has no assigned competition");
         }
 
         // Fetch the competition object and return the ID & associated questions
@@ -125,5 +122,48 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(competitionData);
     }
 
-    // MARK REQUEST (GET REQUEST WITH ADMIN AUTH REQUIRED)
+    // ADMIN AUTH REQUIRED
+    @GetMapping("/competition/mark")
+    public ResponseEntity<Object> markCompetition(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody EventName eventName) {
+        // Run authorization
+        AuthObjects authObjects = accountService.authenticateAdmin(authorizationHeader);
+
+        // Check if any errors were found
+        if (authObjects.getResponseEntity() != null) {
+            return authObjects.getResponseEntity();
+        }
+
+        // Check if event exists and has a competition tied to it
+        Event event = eventService.findEvent(eventName.name());
+
+        if (event == null || event.getCompetitionId() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event does not exist or has no assigned competition");
+        }
+
+        // Fetch the competition object and associated attempts and questions
+        Competition competition = competitionService.findCompetition(event.getCompetitionId());
+        List<Attempt> attempts = attemptService.findByCompetitionTitle(competition.getTitle());
+        List<Question> questions = questionService.findByTitles(competition.getQuestionIds());
+
+        // Hashmap to store results (key is student email and value is their score
+        Map<String, Integer> results = new HashMap<>();
+
+        // Loop through each attempt and question, determining whether the student has put the correct option for each question in the competition
+        for (Attempt attempt : attempts) {
+            int score = 0;
+
+            for (Question question : questions) {
+                Integer chosenIndex = attempt.getAttempts().get(question.getTitle());
+                if (chosenIndex != null && chosenIndex == question.getCorrectIndexChoice()) {
+                    score++;
+                }
+            }
+
+            results.put(attempt.getStudentEmail(), score);
+        }
+
+        // DTO containing the event name, total number of questions, and the results of all attempts
+        EventResults eventResults = new EventResults(event.getName(), competition.getQuestionIds().toArray().length, results);
+        return ResponseEntity.status(HttpStatus.OK).body(eventResults);
+    }
 }

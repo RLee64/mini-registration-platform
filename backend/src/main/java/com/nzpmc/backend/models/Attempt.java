@@ -9,11 +9,11 @@ import java.util.Map;
 @Document("attempt")
 public class Attempt {
     @NotBlank(message = "Student email cannot be blank")
-    String studentEmail;
+    private String studentEmail;
     @NotBlank(message = "Competition id cannot be blank")
-    String competitionId;
+    private String competitionId;
     @NotNull(message = "Missing attempt info")
-    Map<String, Integer> attempts; // Key is the question title and value is student's attempt (i.e. choice index)
+    private Map<String, Integer> attempts; // Key is the question title and value is student's attempt (i.e. choice index)
 
     public Attempt(String studentEmail, String competitionId, Map<String, Integer> attempts) {
         this.studentEmail = studentEmail;

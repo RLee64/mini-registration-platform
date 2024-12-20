@@ -4,6 +4,8 @@ import com.nzpmc.backend.models.Attempt;
 import com.nzpmc.backend.repository.AttemptRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AttemptService {
 
@@ -11,6 +13,10 @@ public class AttemptService {
 
     public AttemptService(AttemptRepository attemptRepository) {
         this.attemptRepository = attemptRepository;
+    }
+
+    public List<Attempt> findByCompetitionTitle(String competitionId) {
+        return attemptRepository.findByCompetitionId(competitionId);
     }
 
     public Attempt saveAttempt(Attempt attempt) {
