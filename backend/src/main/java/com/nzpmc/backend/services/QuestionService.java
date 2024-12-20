@@ -4,6 +4,8 @@ import com.nzpmc.backend.models.Question;
 import com.nzpmc.backend.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class QuestionService {
 
@@ -15,6 +17,10 @@ public class QuestionService {
 
     public Boolean questionExists(String title) {
         return questionRepository.existsByTitleIgnoreCase(title);
+    }
+
+    public List<Question> findByTitles(List<String> titles) {
+        return questionRepository.findByTitleIn(titles);
     }
 
     public Question saveQuestion(Question question) {
