@@ -6,6 +6,7 @@ const EventAreaAdmin = ({ events, setEvents }) => {
     display: "flex",
     flexDirection: "row",
     gap: 80,
+    padding: "0 10px"
   };
 
   const flexComponentMajor = {
@@ -19,7 +20,7 @@ const EventAreaAdmin = ({ events, setEvents }) => {
   return (
     <div style={flexBoxWrapper}>
       <div style={flexComponentMajor}>
-        <h2>Events</h2>
+        <h2>Active</h2>
         <ul>
           {events.map((event) => (
             <Event key={event.name} event={event} />
