@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -54,6 +55,11 @@ public class CompetitionController {
         // Check if competition already exists in database
         if (competitionService.competitionExists(competition.getTitle())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Competition already exists");
+        }
+
+        // Add questionId array if missing
+        if (competition.getQuestionIds() == null) {
+            competition.setQuestionIds(new ArrayList<>());
         }
 
         // Save and return newly created competition

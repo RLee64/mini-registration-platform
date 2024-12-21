@@ -54,7 +54,7 @@ public class AccountController {
     @PostMapping("/register")
     public ResponseEntity<Object> registerAccount(@Valid @RequestBody Student student) {
         // Check if email is already in use
-        if (accountService.findAccount(student.getEmail()) != null) {
+        if (accountService.accountExists(student.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use");
         }
 

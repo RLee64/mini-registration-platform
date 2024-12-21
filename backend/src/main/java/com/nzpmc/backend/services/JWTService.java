@@ -48,7 +48,7 @@ public class JWTService {
 
             return new JWTDetails(claims.getSubject(), claims.get("accessLevel").toString());
         } catch (Exception e) {
-            log.error("e: ", e);
+            log.error("Error: ", e);
             return null;
         }
     }

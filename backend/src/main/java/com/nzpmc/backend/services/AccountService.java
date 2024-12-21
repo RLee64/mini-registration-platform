@@ -25,9 +25,15 @@ public class AccountService {
         this.jwtService = jwtService;
     }
 
+    public Boolean accountExists(String email) {
+        return accountRepository.existsByEmailIgnoreCase(email);
+    }
+
     public Account findAccount(String email) {
         Account account = accountRepository.findByEmailIgnoreCase(email);
-
+        if (account == null) {
+            return null;
+        }
         // Remove password for security
         account.setPassword(null);
         return account;

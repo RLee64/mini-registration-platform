@@ -7,11 +7,13 @@ import { accessTokenAtom } from "../atoms";
 
 import Account from "../components/Account";
 import EventAreaAdmin from "../components/EventAreaAdmin";
+import CompetitionAreaAdmin from "../components/CompetitionAreaAdmin"
 
 const AdminPage = () => {
   const accessToken = useAtomValue(accessTokenAtom);
 
   const [events, setEvents] = useState([]);
+  const [competitions, setCompetitions] = useState([]);
   const [accounts, setAccounts] = useState([]);
 
   const flexBoxWrapper = {
@@ -35,6 +37,8 @@ const AdminPage = () => {
     marginTop: 15
   }
 
+  const transitionTime = 200;
+
   /*Currently events and accounts are only called for at the beginning,
   meaning refreshing is currently required to keep track of updates.
   Maybe a potential fix would be nice? But it's not necessary*/
@@ -50,13 +54,22 @@ const AdminPage = () => {
     });
   }, []);
 
+  useEffect(() => {
+    platformApi.getCompetitions(accessToken).then((receivedCompetitions) => {
+      setCompetitions(receivedCompetitions);
+    });
+  }, []);
+
   return (
     <div>
       <h1>Admin Panel</h1>
-      <Collapsible trigger="Events" triggerStyle={triggerStyle} transitionTime={200}>
+      <Collapsible trigger="Events" triggerStyle={triggerStyle} transitionTime={transitionTime}>
       <EventAreaAdmin events={events} setEvents={setEvents} />
       </Collapsible>
-      <Collapsible trigger="Accounts" triggerStyle={triggerStyle} transitionTime={200}>
+      <Collapsible trigger="Competitions" triggerStyle={triggerStyle} transitionTime={transitionTime}>
+      <CompetitionAreaAdmin competitions={competitions} setCompetitions={setCompetitions}/>
+      </Collapsible>
+      <Collapsible trigger="Accounts" triggerStyle={triggerStyle} transitionTime={transitionTime}>
         <ul style={flexBoxWrapper}>
           {accounts.map((account) => (
             <Account key={account.email} account={account} events={events} />

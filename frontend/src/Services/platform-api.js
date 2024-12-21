@@ -45,4 +45,16 @@ const joinEvent = (eventName, accessToken) => {
   return request.then((response) => response.data)
 }
 
-export default { getAccounts, getEvents, postAccount, postEvent, authLogin, editName, joinEvent };
+// ADMIN NEEDED
+const getCompetitions = (accessToken) => {
+  const request = axios.get(`${baseUrl}/competitions`, getConfig(accessToken));
+  return request.then((response) => response.data);
+}
+
+// ADMIN NEEDED
+const postCompetition = (newCompetition, accessToken) => {
+  const request = axios.post(`${baseUrl}/competitions`, newCompetition, getConfig(accessToken))
+  return request.then((response) => response.data);
+}
+
+export default { getAccounts, getEvents, postAccount, postEvent, authLogin, editName, joinEvent, getCompetitions, postCompetition };
