@@ -1,7 +1,16 @@
+import { useEffect, useState } from 'react';
+import { useAtomValue } from "jotai";
+
 import Competition from './Competition'
 import CreateCompetition from "./CreateCompetition"
+import { accessTokenAtom } from "../atoms";
+import platformApi from '../services/platform-api';
 
 const CompetitionAreaAdmin = ({competitions, setCompetitions}) => {
+  const accessToken = useAtomValue(accessTokenAtom);
+
+  const [ questions, setQuestions ] = useState([]);
+
   const flexBoxWrapper = {
     display: "flex",
     flexDirection: "row",
@@ -17,13 +26,19 @@ const CompetitionAreaAdmin = ({competitions, setCompetitions}) => {
     width: "30%",
   };
 
+  useEffect(() => {
+    platformApi.getQuestions(accessToken).then((receivedQuestions) => {
+      setQuestions(receivedQuestions);
+    });
+  }, []);
+
   return (
     <div style={flexBoxWrapper}>
       <div style={flexComponentMajor}>
         <h2>Active</h2>
         <ul>
           {competitions.map((competition) => (
-            <Competition key={competition.title} competition={competition} />
+            <Competition key={competition.title} competition={competition} questions={questions}/>
           ))}
         </ul>
       </div>

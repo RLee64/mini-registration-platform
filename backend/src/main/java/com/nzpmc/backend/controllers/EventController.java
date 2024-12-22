@@ -115,7 +115,7 @@ public class EventController {
         // Fetch the competition object and return the ID & associated questions
         Competition competition = competitionService.findCompetition(event.getCompetitionId());
 
-        List<Question> questions = questionService.findByTitles(competition.getQuestionIds());
+        List<Question> questions = questionService.findQuestions(competition.getQuestionIds());
 
         CompetitionData competitionData = new CompetitionData(competition.getTitle(), questions);
 
@@ -143,7 +143,7 @@ public class EventController {
         // Fetch the competition object and associated attempts and questions
         Competition competition = competitionService.findCompetition(event.getCompetitionId());
         List<Attempt> attempts = attemptService.findByCompetitionTitle(competition.getTitle());
-        List<Question> questions = questionService.findByTitles(competition.getQuestionIds());
+        List<Question> questions = questionService.findQuestions(competition.getQuestionIds());
 
         // Hashmap to store results (key is student email and value is their score
         Map<String, Integer> results = new HashMap<>();

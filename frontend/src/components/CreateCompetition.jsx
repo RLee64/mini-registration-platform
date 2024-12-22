@@ -57,7 +57,7 @@ const CreateCompetition = ({ competitions, setCompetitions }) => {
     <div>
       <h2>Create Competition</h2>
       <form onSubmit={createCompetition}>
-        <label htmlFor="competitionTitle">Name</label>
+        <label htmlFor="competitionTitle">Title</label>
         <input
           id="competitionTitle"
           value={newCompetitionTitle}

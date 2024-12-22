@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/questions")
@@ -25,6 +27,21 @@ public class QuestionController {
         this.accountService = accountService;
         this.competitionService = competitionService;
         this.questionService = questionService;
+    }
+
+    // ADMIN AUTH REQUIRED
+    @GetMapping
+    public ResponseEntity<Object> getAllQuestions(@RequestHeader("Authorization") String authorizationHeader) {
+        // Run authorization
+        AuthObjects authObjects = accountService.authenticateAdmin(authorizationHeader);
+
+        // Check if any errors were found
+        if (authObjects.getResponseEntity() != null) {
+            return authObjects.getResponseEntity();
+        }
+
+        List<Question> questions = questionService.findAllQuestions();
+        return ResponseEntity.status(HttpStatus.OK).body(questions);
     }
 
     // ADMIN AUTH REQUIRED

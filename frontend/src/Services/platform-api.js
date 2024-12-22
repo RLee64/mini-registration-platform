@@ -3,10 +3,12 @@ import axios from "axios";
 const baseUrl = "/api";
 
 const getConfig = (accessToken) => {
-  return { headers: {
-    'Authorization': `Bearer ${accessToken}`
-  }}
-}
+  return {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+};
 
 //Returns all accounts if admin, but only personal account if member
 const getAccounts = (accessToken) => {
@@ -26,7 +28,11 @@ const postAccount = (newAccount) => {
 
 //ADMIN NEEDED
 const postEvent = (newEvent, accessToken) => {
-  const request = axios.post(`${baseUrl}/events`, newEvent, getConfig(accessToken));
+  const request = axios.post(
+    `${baseUrl}/events`,
+    newEvent,
+    getConfig(accessToken)
+  );
   return request.then((response) => response.data);
 };
 
@@ -36,25 +42,68 @@ const authLogin = (loginDetails) => {
 };
 
 const editName = (newName, accessToken) => {
-  const request = axios.put(`${baseUrl}/accounts/edit-name`, {name: newName}, getConfig(accessToken))
-  return request.then((response) => response.data)
-}
+  const request = axios.put(
+    `${baseUrl}/accounts/edit-name`,
+    { name: newName },
+    getConfig(accessToken)
+  );
+  return request.then((response) => response.data);
+};
 
 const joinEvent = (eventName, accessToken) => {
-  const request = axios.put(`${baseUrl}/accounts/join-event`, {name: eventName}, getConfig(accessToken))
-  return request.then((response) => response.data)
-}
+  const request = axios.put(
+    `${baseUrl}/accounts/join-event`,
+    { name: eventName },
+    getConfig(accessToken)
+  );
+  return request.then((response) => response.data);
+};
 
 // ADMIN NEEDED
 const getCompetitions = (accessToken) => {
   const request = axios.get(`${baseUrl}/competitions`, getConfig(accessToken));
   return request.then((response) => response.data);
-}
+};
 
 // ADMIN NEEDED
 const postCompetition = (newCompetition, accessToken) => {
-  const request = axios.post(`${baseUrl}/competitions`, newCompetition, getConfig(accessToken))
+  const request = axios.post(
+    `${baseUrl}/competitions`,
+    newCompetition,
+    getConfig(accessToken)
+  );
   return request.then((response) => response.data);
-}
+};
 
-export default { getAccounts, getEvents, postAccount, postEvent, authLogin, editName, joinEvent, getCompetitions, postCompetition };
+// ADMIN NEEDED
+const getQuestions = (accessToken) => {
+  const request = axios.get(`${baseUrl}/questions`, getConfig(accessToken));
+  return request.then((response) => response.data);
+};
+
+// ADMIN NEEDED
+const postQuestion = (newQuestion, competitionTitle, accessToken) => {
+  const request = axios.post(
+    `${baseUrl}/questions`,
+    {
+      question: newQuestion,
+      competitionTitle: competitionTitle,
+    },
+    getConfig(accessToken)
+  );
+  return request.then((response) => response.data);
+};
+
+export default {
+  getAccounts,
+  getEvents,
+  postAccount,
+  postEvent,
+  authLogin,
+  editName,
+  joinEvent,
+  getCompetitions,
+  postCompetition,
+  getQuestions,
+  postQuestion
+};

@@ -19,9 +19,9 @@ public class QuestionService {
         return questionRepository.existsByTitleIgnoreCase(title);
     }
 
-    public List<Question> findByTitles(List<String> titles) {
-        return questionRepository.findByTitleIn(titles);
-    }
+    public List<Question> findAllQuestions() { return questionRepository.findAll(); }
+
+    public List<Question> findQuestions(List<String> titles) { return questionRepository.findByTitleIn(titles); }
 
     public Question saveQuestion(Question question) {
         return questionRepository.save(question);
