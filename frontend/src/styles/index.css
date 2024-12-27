@@ -73,6 +73,29 @@ button:active{
   background-color: rgba(52, 19, 105);
 }
 
+.Collapsible__trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:after {
+    content: '▼';
+    z-index: -1;
+    font-size: 14px;
+    transition: transform 100ms;
+  }
+
+  &.is-open {
+    &:after {
+      transform: rotateZ(180deg);
+    }
+  }
+}
+
 footer {
     width: 100%;
     background-color: rgb(34, 36, 51);
