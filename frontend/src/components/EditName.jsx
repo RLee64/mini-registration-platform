@@ -36,9 +36,9 @@ const EditName = ({ account, setAccount }) => {
       .then((response) => {
         setAccount({ ...account, name: response.name });
         setNewName("");
-        setSuccessMessage("Successful Name Change!")
+        setSuccessMessage("Successful Name Change!");
         setTimeout(() => {
-          setSuccessMessage(null)
+          setSuccessMessage(null);
         }, "3000");
       })
       .catch((error) => {

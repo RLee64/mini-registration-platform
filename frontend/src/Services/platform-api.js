@@ -60,6 +60,16 @@ const joinEvent = (eventName, accessToken) => {
 };
 
 // ADMIN NEEDED
+const linkEvent = (linkDetails, accessToken) => {
+  const request = axios.put(
+    `${baseUrl}/events/competition/link`,
+    linkDetails,
+    getConfig(accessToken)
+  );
+  return request.then((response) => response.data);
+}
+
+// ADMIN NEEDED
 const getCompetitions = (accessToken) => {
   const request = axios.get(`${baseUrl}/competitions`, getConfig(accessToken));
   return request.then((response) => response.data);
@@ -102,6 +112,7 @@ export default {
   authLogin,
   editName,
   joinEvent,
+  linkEvent,
   getCompetitions,
   postCompetition,
   getQuestions,

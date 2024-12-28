@@ -1,7 +1,7 @@
-import Event from "../components/Event";
+import EventLinkable from "./EventLinkable";
 import CreateEvent from "../components/CreateEvent";
 
-const EventAreaAdmin = ({ events, setEvents }) => {
+const EventAreaAdmin = ({ events, setEvents, competitions }) => {
   const flexBoxWrapper = {
     display: "flex",
     flexDirection: "row",
@@ -23,7 +23,7 @@ const EventAreaAdmin = ({ events, setEvents }) => {
         <h2>Active</h2>
         <ul>
           {events.map((event) => (
-            <Event key={event.name} event={event} />
+            <EventLinkable key={event.name} event={event} events={events} setEvents={setEvents} competitions={competitions} />
           ))}
         </ul>
       </div>

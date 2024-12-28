@@ -70,7 +70,11 @@ const AdminPage = () => {
         triggerStyle={triggerStyle}
         transitionTime={transitionTime}
       >
-        <EventAreaAdmin events={events} setEvents={setEvents} />
+        <EventAreaAdmin
+          events={events}
+          setEvents={setEvents}
+          competitions={competitions}
+        />
       </Collapsible>
       <Collapsible
         trigger="Competitions"
