@@ -89,6 +89,10 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event does not exist");
         }
 
+        if (eventService.competitionAssigned(competitionTitle)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Competition already assigned");
+        }
+
         // Update and return the event
         event.setCompetitionId(competitionTitle);
         eventService.saveEvent(event);

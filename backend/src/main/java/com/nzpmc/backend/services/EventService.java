@@ -27,6 +27,16 @@ public class EventService {
         return eventRepository.findAll();
     }
 
+    public boolean competitionAssigned(String competitionId) {
+        List<Event> events = findAllEvents();
+        for (Event event : events) {
+            if (event.getCompetitionId().equals(competitionId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Event saveEvent(Event event) {
         return eventRepository.save(event);
     }
