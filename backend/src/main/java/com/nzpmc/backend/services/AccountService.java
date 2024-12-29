@@ -40,11 +40,7 @@ public class AccountService {
     }
 
     public List<Account> findAllAccounts() {
-        List<Account> accounts = accountRepository.findAll();
-
-        // Remove passwords for security
-        accounts.forEach(a -> a.setPassword(null));
-        return accounts;
+        return accountRepository.findAll();
     }
 
     public Account registerAccount(Account account) {
@@ -53,11 +49,7 @@ public class AccountService {
         account.setPassword(hashedPassword);
 
         // Save account to MongoDB
-        Account createdAccount = accountRepository.save(account);
-
-        // Remove password for security
-        createdAccount.setPassword(null);
-        return createdAccount;
+        return accountRepository.save(account);
     }
 
     public Account authenticateLogin(LoginDetails loginDetails) {

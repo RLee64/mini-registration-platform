@@ -43,10 +43,14 @@ public class AccountController {
 
         // If token details OR account lacks admin permissions, only return the user
         if (!Objects.equals(jwtDetails.accessLevel(), "admin") || !Objects.equals(account.getAccessLevel(), "admin")) {
+            // Remove password for security
+            account.setPassword(null);
             return ResponseEntity.status(HttpStatus.OK).body(account);
         }
 
         List<Account> accounts = accountService.findAllAccounts();
+        // Remove passwords for security
+        accounts.forEach(a -> a.setPassword(null));
 
         return ResponseEntity.status(HttpStatus.OK).body(accounts);
     }
@@ -59,6 +63,8 @@ public class AccountController {
         }
 
         Account createdAccount = accountService.registerAccount(student);
+        // Remove password for security
+        createdAccount.setPassword(null);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAccount);
     }
