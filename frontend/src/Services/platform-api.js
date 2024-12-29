@@ -69,6 +69,14 @@ const linkEvent = (linkDetails, accessToken) => {
   return request.then((response) => response.data);
 }
 
+const startCompetition = (eventName, accessToken) => {
+  const request = axios.get(
+    `${baseUrl}/events/competition/start?eventName=${eventName}`,
+    getConfig(accessToken)
+  );
+  return request.then((response) => response.data);
+}
+
 // ADMIN NEEDED
 const getCompetitions = (accessToken) => {
   const request = axios.get(`${baseUrl}/competitions`, getConfig(accessToken));
@@ -113,6 +121,7 @@ export default {
   editName,
   joinEvent,
   linkEvent,
+  startCompetition,
   getCompetitions,
   postCompetition,
   getQuestions,

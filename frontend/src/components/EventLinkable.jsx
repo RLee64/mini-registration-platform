@@ -110,9 +110,9 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
             onClick={() => setErrorMessage(null)}
           >
             <option value="">Select a competition</option>
-            {unlinkedCompetitionIds.map((id) => {
-              return <option key={id}>{id}</option>;
-            })}
+            {unlinkedCompetitionIds.map((id) => (
+              <option key={id}>{id}</option>
+            ))}
           </select>
           <button type="submit" style={{ ...smallButtonStyle, ...rightMargin }}>
             Link

@@ -30,7 +30,7 @@ public class EventService {
     public boolean competitionAssigned(String competitionId) {
         List<Event> events = findAllEvents();
         for (Event event : events) {
-            if (event.getCompetitionId().equals(competitionId)) {
+            if (event.getCompetitionId() != null && event.getCompetitionId().equals(competitionId)) {
                 return true;
             }
         }

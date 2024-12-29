@@ -100,7 +100,7 @@ public class EventController {
     }
 
     @GetMapping("/competition/start")
-    public ResponseEntity<Object> startCompetition(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody EventName eventName) {
+    public ResponseEntity<Object> startCompetition(@RequestHeader("Authorization") String authorizationHeader, @RequestParam String eventName) {
         // Run authorization
         AuthObjects authObjects = accountService.authenticateAccount(authorizationHeader);
 
@@ -110,7 +110,7 @@ public class EventController {
         }
 
         // Check if event exists and has a competition tied to it
-        Event event = eventService.findEvent(eventName.name());
+        Event event = eventService.findEvent(eventName);
 
         if (event == null || event.getCompetitionId() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event does not exist or has no assigned competition");
@@ -120,6 +120,9 @@ public class EventController {
         Competition competition = competitionService.findCompetition(event.getCompetitionId());
 
         List<Question> questions = questionService.findQuestions(competition.getQuestionIds());
+
+        // Remove correct index positions (correctIndexChoice has type int so -1 is used in the place of null)
+        questions.forEach(question -> {question.setCorrectIndexChoice(-1);});
 
         CompetitionData competitionData = new CompetitionData(competition.getTitle(), questions);
 
