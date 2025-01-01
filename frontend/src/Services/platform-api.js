@@ -77,6 +77,15 @@ const startCompetition = (eventName, accessToken) => {
   return request.then((response) => response.data);
 }
 
+const postAttempt = (attemptDetails, accessToken) => {
+  const request = axios.post(
+    `${baseUrl}/attempts`,
+    attemptDetails,
+    getConfig(accessToken)
+  )
+  return request.then((response) => response.data)
+}
+
 // ADMIN NEEDED
 const getCompetitions = (accessToken) => {
   const request = axios.get(`${baseUrl}/competitions`, getConfig(accessToken));
@@ -122,6 +131,7 @@ export default {
   joinEvent,
   linkEvent,
   startCompetition,
+  postAttempt,
   getCompetitions,
   postCompetition,
   getQuestions,
