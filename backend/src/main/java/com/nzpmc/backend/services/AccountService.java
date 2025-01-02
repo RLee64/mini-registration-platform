@@ -30,13 +30,7 @@ public class AccountService {
     }
 
     public Account findAccount(String email) {
-        Account account = accountRepository.findByEmailIgnoreCase(email);
-        if (account == null) {
-            return null;
-        }
-        // Remove password for security
-        account.setPassword(null);
-        return account;
+        return accountRepository.findByEmailIgnoreCase(email);
     }
 
     public List<Account> findAllAccounts() {
@@ -58,9 +52,6 @@ public class AccountService {
             return null;
         }
         boolean correctPassword = passwordEncoder.matches(loginDetails.password(), foundAccount.getPassword());
-
-        // Remove password for security
-        foundAccount.setPassword(null);
 
         return correctPassword ? foundAccount : null;
     }
