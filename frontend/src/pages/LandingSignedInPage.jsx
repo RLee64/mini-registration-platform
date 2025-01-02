@@ -23,8 +23,8 @@ const LandingSignedInPage = () => {
   };
 
   const flexComponentMinor = {
-    width: "30%"
-  }
+    width: "30%",
+  };
 
   useEffect(() => {
     platformApi.getEvents().then((receivedEvents) => {

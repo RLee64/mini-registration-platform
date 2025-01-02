@@ -56,9 +56,8 @@ const SignUpPage = () => {
       .catch((error) => {
         console.log(error);
         if (error.response.status === 409) {
-          setErrorMessage("An account with this email already exists")
-        }
-        else {
+          setErrorMessage("An account with this email already exists");
+        } else {
           setErrorMessage("Error - Account could not be created");
         }
       });
@@ -67,7 +66,7 @@ const SignUpPage = () => {
   return (
     <div className="form-box">
       <h2>Sign Up to The NZPMC</h2>
-      <form onSubmit={createAccount}>
+      <form onSubmit={createAccount} autoComplete="off">
         <label htmlFor="signUpName">Name</label>
         <input
           id="signUpName"

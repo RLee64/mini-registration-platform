@@ -11,7 +11,7 @@ const EventJoinable = ({ event, account, setAccount }) => {
 
   const navigate = useNavigate();
 
-  const [attemptExists, setAttemptExists] = useState(null)
+  const [attemptExists, setAttemptExists] = useState(null);
 
   const joinedEvent = account.joinedEvents?.find(
     (eventName) => eventName === event.name
@@ -21,11 +21,11 @@ const EventJoinable = ({ event, account, setAccount }) => {
     platformApi
       .attemptExists(event.competitionId, accessToken)
       .then((response) => {
-        setAttemptExists(response)
+        setAttemptExists(response);
       });
   }
 
-  console.log(attemptExists)
+  console.log(attemptExists);
 
   const eventHolderStyle = {
     display: "flex",
@@ -77,7 +77,9 @@ const EventJoinable = ({ event, account, setAccount }) => {
         {joinedEvent ? (
           event.competitionId ? (
             attemptExists ? (
-              <p style={attemptExistsStyle}><em>An attempt has been submitted</em></p>
+              <p style={attemptExistsStyle}>
+                <em>An attempt has been submitted</em>
+              </p>
             ) : (
               <button style={startButtonStyle} onClick={startCompetition}>
                 Start Competition {attemptExists}

@@ -104,15 +104,17 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
         <p>{event.description}</p>
         {event.competitionId ? (
           <>
-          <p style={competitionStyle}><strong>Competition:</strong> {event.competitionId}</p>
-          <EventResults event={event}/>
+            <p style={competitionStyle}>
+              <strong>Competition:</strong> {event.competitionId}
+            </p>
+            <EventResults event={event} />
           </>
         ) : (
           <p style={competitionStyle}>No competition linked</p>
         )}
       </div>
       {editingLink ? (
-        <form onSubmit={linkEvent}>
+        <form onSubmit={linkEvent} autoComplete="off">
           <SmallMessage message={errorMessage} type="error" />
           <SmallMessage message={successMessage} type="success" />
           <select

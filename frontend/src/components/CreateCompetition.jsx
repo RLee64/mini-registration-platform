@@ -56,7 +56,7 @@ const CreateCompetition = ({ competitions, setCompetitions }) => {
   return (
     <div>
       <h2>Create Competition</h2>
-      <form onSubmit={createCompetition}>
+      <form onSubmit={createCompetition} autoComplete="off">
         <label htmlFor="competitionTitle">Title</label>
         <input
           id="competitionTitle"

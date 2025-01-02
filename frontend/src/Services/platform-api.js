@@ -81,9 +81,9 @@ const attemptExists = (competitionTitle, accessToken) => {
   const request = axios.get(
     `${baseUrl}/attempts/${competitionTitle}`,
     getConfig(accessToken)
-  )
-  return request.then((response) => response.data)
-}
+  );
+  return request.then((response) => response.data);
+};
 
 const postAttempt = (attemptDetails, accessToken) => {
   const request = axios.post(

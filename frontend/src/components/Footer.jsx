@@ -3,4 +3,4 @@ const Footer = () => {
   return <footer>© NZPMC 2024</footer>;
 };
 
-export default Footer
+export default Footer;

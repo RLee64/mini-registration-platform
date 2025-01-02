@@ -5,42 +5,42 @@ import { accessTokenAtom, accessLevelAtom } from "../atoms";
 
 // Button found in header that directs user to login page or allows them to sign out
 const AuthButton = () => {
-    const setAccessToken = useSetAtom(accessTokenAtom);
-    const [accessLevel, setAccessLevel] = useAtom(accessLevelAtom);
-  
-    const navigate = useNavigate();
-  
-    const currentPath = useLocation().pathname;
-    const disableAuthButton =
-      currentPath === "/login" || currentPath === "/sign-up";
-    const enableHomeButton = currentPath.startsWith("/event")
-  
-    const toLogin = () => {
-      navigate("/login");
-    };
-  
-    const signOut = () => {
-      setAccessToken(null);
-      setAccessLevel(null);
-    };
+  const setAccessToken = useSetAtom(accessTokenAtom);
+  const [accessLevel, setAccessLevel] = useAtom(accessLevelAtom);
 
-    const toHome = () => {
-      navigate("/")
-    }
-  
-    if (disableAuthButton) {
-      return null;
-    }
+  const navigate = useNavigate();
 
-    if (enableHomeButton) {
-      return <button onClick={toHome}>Home</button>
-    }
+  const currentPath = useLocation().pathname;
+  const disableAuthButton =
+    currentPath === "/login" || currentPath === "/sign-up";
+  const enableHomeButton = currentPath.startsWith("/event");
 
-    return accessLevel ? (
-      <button onClick={signOut}>Sign Out</button>
-    ) : (
-      <button onClick={toLogin}>Login</button>
-    );
+  const toLogin = () => {
+    navigate("/login");
   };
 
-  export default AuthButton
+  const signOut = () => {
+    setAccessToken(null);
+    setAccessLevel(null);
+  };
+
+  const toHome = () => {
+    navigate("/");
+  };
+
+  if (disableAuthButton) {
+    return null;
+  }
+
+  if (enableHomeButton) {
+    return <button onClick={toHome}>Home</button>;
+  }
+
+  return accessLevel ? (
+    <button onClick={signOut}>Sign Out</button>
+  ) : (
+    <button onClick={toLogin}>Login</button>
+  );
+};
+
+export default AuthButton;

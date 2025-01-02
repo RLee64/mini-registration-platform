@@ -48,10 +48,11 @@ const LoginPage = () => {
       .catch((error) => {
         console.log(error);
         if (error.status === 401) {
-          setErrorMessage("Invalid email or password")
-        }
-        else {
-          setErrorMessage("Error authenticating request, please try again later")
+          setErrorMessage("Invalid email or password");
+        } else {
+          setErrorMessage(
+            "Error authenticating request, please try again later"
+          );
         }
       });
   };
@@ -59,7 +60,7 @@ const LoginPage = () => {
   return (
     <div className="form-box">
       <h2>Log In</h2>
-      <form onSubmit={login}>
+      <form onSubmit={login} autoComplete="off">
         <label htmlFor="loginEmail">Email</label>
         <input
           id="loginEmail"

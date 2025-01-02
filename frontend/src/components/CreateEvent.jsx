@@ -78,7 +78,7 @@ const CreateEvent = ({ events, setEvents }) => {
   return (
     <div>
       <h2>Create Event</h2>
-      <form onSubmit={createEvent}>
+      <form onSubmit={createEvent} autoComplete="off">
         <label htmlFor="eventName">Name</label>
         <input
           id="eventName"

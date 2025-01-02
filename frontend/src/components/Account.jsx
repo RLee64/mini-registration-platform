@@ -21,9 +21,7 @@ const Account = ({ account, events }) => {
           </p>
           <ul>
             {account.joinedEvents.map((eventName) => (
-              <li key={eventName}>
-                - {eventName}
-              </li>
+              <li key={eventName}>- {eventName}</li>
             ))}
           </ul>
         </div>

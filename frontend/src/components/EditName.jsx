@@ -51,7 +51,7 @@ const EditName = ({ account, setAccount }) => {
     return <button onClick={() => setEditingName(true)}>Edit name</button>;
   }
   return (
-    <form onSubmit={changeName}>
+    <form onSubmit={changeName} autoComplete="off">
       <label htmlFor="newAccountName">New Name</label>
       <input
         id="newAccountName"

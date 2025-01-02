@@ -173,7 +173,11 @@ const Competition = ({ competition, questions, setQuestions }) => {
                       {question.options.map((option, index) => {
                         const correct =
                           question.correctIndexChoice === index ? "✔" : "✗";
-                        return <li key={index}>{correct} - {option}</li>;
+                        return (
+                          <li key={index}>
+                            {correct} - {option}
+                          </li>
+                        );
                       })}
                     </ul>
                   </li>

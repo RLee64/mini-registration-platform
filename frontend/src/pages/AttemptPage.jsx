@@ -90,7 +90,7 @@ const AttemptPage = () => {
   return (
     <div>
       <h1>{competitionData.competitionTitle}</h1>
-      <form onSubmit={submitAttempt}>
+      <form onSubmit={submitAttempt} autoComplete="off">
         {competitionData.questions.map((question, index) => (
           <fieldset key={question.title} style={questionStyle}>
             <h3 style={questionHeaderStyle}>{`Q${index + 1}`}</h3>

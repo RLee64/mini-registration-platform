@@ -6,7 +6,7 @@ const EventAreaAdmin = ({ events, setEvents, competitions }) => {
     display: "flex",
     flexDirection: "row",
     gap: 80,
-    padding: "0 10px"
+    padding: "0 10px",
   };
 
   const flexComponentMajor = {
@@ -23,7 +23,13 @@ const EventAreaAdmin = ({ events, setEvents, competitions }) => {
         <h2>Active</h2>
         <ul>
           {events.map((event) => (
-            <EventLinkable key={event.name} event={event} events={events} setEvents={setEvents} competitions={competitions} />
+            <EventLinkable
+              key={event.name}
+              event={event}
+              events={events}
+              setEvents={setEvents}
+              competitions={competitions}
+            />
           ))}
         </ul>
       </div>

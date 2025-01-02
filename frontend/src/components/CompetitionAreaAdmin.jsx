@@ -1,12 +1,17 @@
-import Competition from './Competition'
-import CreateCompetition from "./CreateCompetition"
+import Competition from "./Competition";
+import CreateCompetition from "./CreateCompetition";
 
-const CompetitionAreaAdmin = ({competitions, setCompetitions, questions, setQuestions}) => {
+const CompetitionAreaAdmin = ({
+  competitions,
+  setCompetitions,
+  questions,
+  setQuestions,
+}) => {
   const flexBoxWrapper = {
     display: "flex",
     flexDirection: "row",
     gap: 80,
-    padding: "0 10px"
+    padding: "0 10px",
   };
 
   const flexComponentMajor = {
@@ -23,12 +28,20 @@ const CompetitionAreaAdmin = ({competitions, setCompetitions, questions, setQues
         <h2>Active</h2>
         <ul>
           {competitions.map((competition) => (
-            <Competition key={competition.title} competition={competition} questions={questions} setQuestions={setQuestions}/>
+            <Competition
+              key={competition.title}
+              competition={competition}
+              questions={questions}
+              setQuestions={setQuestions}
+            />
           ))}
         </ul>
       </div>
       <div style={flexComponentMinor}>
-        <CreateCompetition competitions={competitions} setCompetitions={setCompetitions}/>
+        <CreateCompetition
+          competitions={competitions}
+          setCompetitions={setCompetitions}
+        />
       </div>
     </div>
   );
