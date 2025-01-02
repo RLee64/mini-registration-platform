@@ -71,7 +71,7 @@ const linkEvent = (linkDetails, accessToken) => {
 
 const startCompetition = (eventName, accessToken) => {
   const request = axios.get(
-    `${baseUrl}/events/competition/start?eventName=${eventName}`,
+    `${baseUrl}/events/competition/start/${eventName}`,
     getConfig(accessToken)
   );
   return request.then((response) => response.data);

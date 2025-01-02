@@ -99,8 +99,8 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
     }
 
-    @GetMapping("/competition/start")
-    public ResponseEntity<Object> startCompetition(@RequestHeader("Authorization") String authorizationHeader, @RequestParam String eventName) {
+    @GetMapping("/competition/start/{eventName}")
+    public ResponseEntity<Object> startCompetition(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String eventName) {
         // Run authorization
         AuthObjects authObjects = accountService.authenticateAccount(authorizationHeader);
 
