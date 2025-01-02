@@ -2,19 +2,21 @@ import { useEffect, useState } from "react";
 import { useAtomValue } from "jotai";
 
 import platformApi from "../services/platform-api";
-import { accessTokenAtom } from "../atoms";
-import { useNavigate } from "react-router-dom";
+import { accessTokenAtom, accessLevelAtom } from "../atoms";
+import { useNavigate, useParams } from "react-router-dom";
+import Message from "../components/Message";
 
 const AttemptPage = () => {
   const accessToken = useAtomValue(accessTokenAtom);
+  const accessLevel = useAtomValue(accessLevelAtom);
 
-  const searchParams = new URLSearchParams(window.location.search);
-  const eventName = searchParams.get("name");
+  const { name: eventName } = useParams();
 
   const navigate = useNavigate();
 
   const [competitionData, setCompetitionData] = useState(null);
   const [answers, setAnswers] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
 
   const questionStyle = {
     border: 0,
@@ -37,7 +39,11 @@ const AttemptPage = () => {
   };
 
   useEffect(() => {
-    if (accessToken === null) {
+    setErrorMessage("");
+  }, [answers]);
+
+  useEffect(() => {
+    if (accessToken === null || accessLevel !== "student") {
       navigate("/");
       return;
     }
@@ -68,13 +74,11 @@ const AttemptPage = () => {
 
     platformApi
       .postAttempt(attemptDetails, accessToken)
-      .then((returnedAttempt) => {
-        console.log(returnedAttempt)
-        console.log("success")
-      }
-
-      )
+      .then(() => {
+        navigate("/");
+      })
       .catch((error) => {
+        setErrorMessage("Error - Submission could not be posted");
         console.log(error);
       });
   };
@@ -106,6 +110,7 @@ const AttemptPage = () => {
             ))}
           </fieldset>
         ))}
+        <Message message={errorMessage} type="error" />
         <button type="submit">Submit</button>
       </form>
     </div>

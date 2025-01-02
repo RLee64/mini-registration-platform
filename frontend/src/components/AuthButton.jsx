@@ -13,6 +13,7 @@ const AuthButton = () => {
     const currentPath = useLocation().pathname;
     const disableAuthButton =
       currentPath === "/login" || currentPath === "/sign-up";
+    const enableHomeButton = currentPath.startsWith("/event")
   
     const toLogin = () => {
       navigate("/login");
@@ -22,10 +23,19 @@ const AuthButton = () => {
       setAccessToken(null);
       setAccessLevel(null);
     };
+
+    const toHome = () => {
+      navigate("/")
+    }
   
     if (disableAuthButton) {
       return null;
     }
+
+    if (enableHomeButton) {
+      return <button onClick={toHome}>Home</button>
+    }
+
     return accessLevel ? (
       <button onClick={signOut}>Sign Out</button>
     ) : (

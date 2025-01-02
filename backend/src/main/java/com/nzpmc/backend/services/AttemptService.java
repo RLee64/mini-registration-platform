@@ -19,6 +19,10 @@ public class AttemptService {
         return attemptRepository.findByCompetitionId(competitionId);
     }
 
+    public Attempt findByStudentEmailAndCompetitionId(String studentEmail, String competitionId) {
+        return attemptRepository.findByStudentEmailAndCompetitionId(studentEmail, competitionId);
+    }
+
     public Attempt saveAttempt(Attempt attempt) {
         return attemptRepository.save(attempt);
     }
