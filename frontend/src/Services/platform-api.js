@@ -67,7 +67,7 @@ const linkEvent = (linkDetails, accessToken) => {
     getConfig(accessToken)
   );
   return request.then((response) => response.data);
-}
+};
 
 const startCompetition = (eventName, accessToken) => {
   const request = axios.get(
@@ -75,16 +75,16 @@ const startCompetition = (eventName, accessToken) => {
     getConfig(accessToken)
   );
   return request.then((response) => response.data);
-}
+};
 
 const postAttempt = (attemptDetails, accessToken) => {
   const request = axios.post(
     `${baseUrl}/attempts`,
     attemptDetails,
     getConfig(accessToken)
-  )
-  return request.then((response) => response.data)
-}
+  );
+  return request.then((response) => response.data);
+};
 
 // ADMIN NEEDED
 const getCompetitions = (accessToken) => {
@@ -121,6 +121,15 @@ const postQuestion = (newQuestion, competitionTitle, accessToken) => {
   return request.then((response) => response.data);
 };
 
+//ADMIN NEEDED
+const getResults = (eventName, accessToken) => {
+  const request = axios.get(
+    `${baseUrl}/events/competition/mark/${eventName}`,
+    getConfig(accessToken)
+  );
+  return request.then((response) => response.data);
+};
+
 export default {
   getAccounts,
   getEvents,
@@ -135,5 +144,6 @@ export default {
   getCompetitions,
   postCompetition,
   getQuestions,
-  postQuestion
+  postQuestion,
+  getResults,
 };

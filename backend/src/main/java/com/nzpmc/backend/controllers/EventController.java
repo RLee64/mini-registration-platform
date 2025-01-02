@@ -130,8 +130,8 @@ public class EventController {
     }
 
     // ADMIN AUTH REQUIRED
-    @GetMapping("/competition/mark")
-    public ResponseEntity<Object> markCompetition(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody EventName eventName) {
+    @GetMapping("/competition/mark/{eventName}")
+    public ResponseEntity<Object> markCompetition(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String eventName) {
         // Run authorization
         AuthObjects authObjects = accountService.authenticateAdmin(authorizationHeader);
 
@@ -141,7 +141,7 @@ public class EventController {
         }
 
         // Check if event exists and has a competition tied to it
-        Event event = eventService.findEvent(eventName.name());
+        Event event = eventService.findEvent(eventName);
 
         if (event == null || event.getCompetitionId() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event does not exist or has no assigned competition");

@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai";
 import platformApi from "../services/platform-api";
 import { accessTokenAtom } from "../atoms";
 import SmallMessage from "./SmallMessage";
+import EventResults from "./EventResults";
 
 const EventLinkable = ({ event, events, setEvents, competitions }) => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -55,6 +56,11 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
     marginRight: 20,
   };
 
+  const competitionStyle = {
+    borderTop: "2px solid rgba(63, 66, 75, 0.68)",
+    paddingTop: 20,
+  };
+
   const linkEvent = (submitEvent) => {
     submitEvent.preventDefault();
 
@@ -62,7 +68,7 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
       setErrorMessage("Please include a competition");
       return;
     }
-    
+
     const linkDetails = {
       eventName: event.name,
       competitionTitle: selectedCompetitionId,
@@ -73,7 +79,9 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
       .then((returnedEvent) => {
         setEvents(
           events.map((loopedEvent) =>
-            loopedEvent.name === returnedEvent.name ? returnedEvent : loopedEvent
+            loopedEvent.name === returnedEvent.name
+              ? returnedEvent
+              : loopedEvent
           )
         );
         setSelectedCompetitionId("");
@@ -94,9 +102,14 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
         <h3>{event.name}</h3>
         <p>{event.date}</p>
         <p>{event.description}</p>
-        <p>
-          {`Competition: ${event.competitionId ? event.competitionId : "N/A"}`}
-        </p>
+        {event.competitionId ? (
+          <>
+          <p style={competitionStyle}><strong>Competition:</strong> {event.competitionId}</p>
+          <EventResults event={event}/>
+          </>
+        ) : (
+          <p style={competitionStyle}>No competition linked</p>
+        )}
       </div>
       {editingLink ? (
         <form onSubmit={linkEvent}>
