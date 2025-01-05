@@ -117,13 +117,10 @@ const getQuestions = (accessToken) => {
 };
 
 // ADMIN NEEDED
-const postQuestion = (newQuestion, competitionTitle, accessToken) => {
+const postQuestion = (newQuestion, accessToken) => {
   const request = axios.post(
     `${baseUrl}/questions`,
-    {
-      question: newQuestion,
-      competitionTitle: competitionTitle,
-    },
+    newQuestion,
     getConfig(accessToken)
   );
   return request.then((response) => response.data);

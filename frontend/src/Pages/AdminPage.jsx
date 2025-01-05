@@ -8,6 +8,7 @@ import { accessTokenAtom } from "../atoms";
 import Account from "../components/Account";
 import EventAreaAdmin from "../components/EventAreaAdmin";
 import CompetitionAreaAdmin from "../components/CompetitionAreaAdmin";
+import QuestionAreaAdmin from "../components/QuestionAreaAdmin";
 
 const AdminPage = () => {
   const accessToken = useAtomValue(accessTokenAtom);
@@ -84,6 +85,16 @@ const AdminPage = () => {
         <CompetitionAreaAdmin
           competitions={competitions}
           setCompetitions={setCompetitions}
+          questions={questions}
+          setQuestions={setQuestions}
+        />
+      </Collapsible>
+      <Collapsible
+        trigger="Questions"
+        triggerStyle={triggerStyle}
+        transitionTime={transitionTime}
+      >
+        <QuestionAreaAdmin
           questions={questions}
           setQuestions={setQuestions}
         />
