@@ -23,6 +23,8 @@ public class QuestionService {
 
     public List<Question> findQuestions(List<String> titles) { return questionRepository.findByTitleIn(titles); }
 
+    public Question findQuestion(String title) { return questionRepository.findByTitle(title); }
+
     public Question saveQuestion(Question question) {
         return questionRepository.save(question);
     }

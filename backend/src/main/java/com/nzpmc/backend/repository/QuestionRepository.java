@@ -10,4 +10,5 @@ import java.util.List;
 public interface QuestionRepository extends MongoRepository<Question, String> {
     Boolean existsByTitleIgnoreCase(String title);
     List<Question> findByTitleIn(List<String> titles);
+    Question findByTitle(String title);
 }

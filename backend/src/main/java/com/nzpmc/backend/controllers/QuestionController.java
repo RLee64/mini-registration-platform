@@ -1,8 +1,6 @@
 package com.nzpmc.backend.controllers;
 
 import com.nzpmc.backend.dtos.AuthObjects;
-import com.nzpmc.backend.dtos.QuestionRequest;
-import com.nzpmc.backend.models.Competition;
 import com.nzpmc.backend.models.Question;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.CompetitionService;
@@ -46,7 +44,7 @@ public class QuestionController {
 
     // ADMIN AUTH REQUIRED
     @PostMapping
-    public ResponseEntity<Object> createQuestion(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody QuestionRequest questionRequest) {
+    public ResponseEntity<Object> createQuestion(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody Question question) {
         // Run authorization
         AuthObjects authObjects = accountService.authenticateAdmin(authorizationHeader);
 
@@ -55,28 +53,13 @@ public class QuestionController {
             return authObjects.getResponseEntity();
         }
 
-        Competition competition = competitionService.findCompetition(questionRequest.competitionTitle());
-
-        // Determine if competition exists before continuing
-        if (competition == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Competition not found");
-        }
-
-        Question question = questionRequest.question();
-
         // Check if question already exists in database
         if (questionService.questionExists(question.getTitle())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("A question with this title already exists");
         }
 
-        // Save the newly created question
+        // Save and return the newly created question
         Question createdQuestion = questionService.saveQuestion(question);
-
-        // Update the competition to include the question ID
-        competition.addQuestionId(question.getTitle());
-        competitionService.saveCompetition(competition);
-
-        // Return the competition details
         return ResponseEntity.status(HttpStatus.CREATED).body(createdQuestion);
     }
 }
