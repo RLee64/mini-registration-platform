@@ -52,10 +52,6 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
     width: 100,
   };
 
-  const rightMargin = {
-    marginRight: 20,
-  };
-
   const competitionStyle = {
     borderTop: "2px solid rgba(63, 66, 75, 0.68)",
     paddingTop: 20,
@@ -118,7 +114,6 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
           <SmallMessage message={errorMessage} type="error" />
           <SmallMessage message={successMessage} type="success" />
           <select
-            id="competitions"
             name="competitions"
             style={selectStyle}
             onChange={(event) => setSelectedCompetitionId(event.target.value)}
@@ -126,10 +121,12 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
           >
             <option value="">Select a competition</option>
             {unlinkedCompetitionIds.map((id) => (
-              <option key={id}>{id}</option>
+              <option key={id} value={id}>
+                {id}
+              </option>
             ))}
           </select>
-          <button type="submit" style={{ ...smallButtonStyle, ...rightMargin }}>
+          <button type="submit" style={{ ...smallButtonStyle, marginRight: 20 }}>
             Link
           </button>
           <button

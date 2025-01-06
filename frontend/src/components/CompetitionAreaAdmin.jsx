@@ -15,11 +15,11 @@ const CompetitionAreaAdmin = ({
   };
 
   const flexComponentMajor = {
-    width: "70%",
+    width: "60%",
   };
 
   const flexComponentMinor = {
-    width: "20%",
+    width: "30%",
   };
 
   return (

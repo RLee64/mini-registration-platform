@@ -10,7 +10,7 @@ const EventAreaAdmin = ({ events, setEvents, competitions }) => {
   };
 
   const flexComponentMajor = {
-    width: "55%",
+    width: "60%",
   };
 
   const flexComponentMinor = {

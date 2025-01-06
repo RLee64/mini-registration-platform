@@ -111,6 +111,16 @@ const postCompetition = (newCompetition, accessToken) => {
 };
 
 // ADMIN NEEDED
+const linkQuestion = (linkDetails, accessToken) => {
+  const request = axios.put(
+    `${baseUrl}/competitions/add-question`,
+    linkDetails,
+    getConfig(accessToken)
+  );
+  return request.then((response) => response.data);
+};
+
+// ADMIN NEEDED
 const getQuestions = (accessToken) => {
   const request = axios.get(`${baseUrl}/questions`, getConfig(accessToken));
   return request.then((response) => response.data);
@@ -149,6 +159,7 @@ export default {
   postAttempt,
   getCompetitions,
   postCompetition,
+  linkQuestion,
   getQuestions,
   postQuestion,
   getResults,

@@ -6,21 +6,21 @@ const Competition = ({ competition, questions }) => {
     fontSize: 16,
     backgroundColor: "rgba(148, 146, 196, 0.2)",
     padding: 8,
-    borderBottom: "2px solid rgba(98, 92, 129, 0.51)",
+    borderBottom: "2px solid rgba(67, 63, 83, 0.73))",
     marginBottom: 15,
   };
 
   const questionHolderStyle = {
     paddingLeft: 8,
     width: "70%",
-    marginBottom: 15,
-    marginTop: -15,
+    marginBottom: 20,
+    marginTop: -20,
   };
 
   const questionTitleStyle = {
     margin: "30px 0 5px 0",
     paddingBottom: 5,
-    borderBottom: "3px solid rgb(61, 60, 83)",
+    borderBottom: "2px solid rgb(61, 60, 83)",
   };
 
   return (

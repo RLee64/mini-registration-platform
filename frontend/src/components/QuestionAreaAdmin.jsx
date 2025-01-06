@@ -1,7 +1,7 @@
 import CreateQuestion from "./CreateQuestion";
 import Question from "./Question";
 
-const QuestionAreaAdmin = ({ questions, setQuestions }) => {
+const QuestionAreaAdmin = ({ questions, setQuestions, competitions, setCompetitions }) => {
   const mainStyle = {
     display: "flex",
     flexDirection: "row",
@@ -10,11 +10,11 @@ const QuestionAreaAdmin = ({ questions, setQuestions }) => {
   };
 
   const majorSectionStyle = {
-    width: "50%",
+    width: "60%",
   };
 
   const minorSectionStyle = {
-    width: "25%",
+    width: "30%",
   };
 
   return (
@@ -23,7 +23,12 @@ const QuestionAreaAdmin = ({ questions, setQuestions }) => {
         <h2>Question Pool</h2>
         <ul>
           {questions.map((question) => (
-            <Question key={question.title} question={question} />
+            <Question
+              key={question.title}
+              question={question}
+              competitions={competitions}
+              setCompetitions={setCompetitions}
+            />
           ))}
         </ul>
       </div>

@@ -97,6 +97,8 @@ const AdminPage = () => {
         <QuestionAreaAdmin
           questions={questions}
           setQuestions={setQuestions}
+          competitions={competitions}
+          setCompetitions={setCompetitions}
         />
       </Collapsible>
       <Collapsible
