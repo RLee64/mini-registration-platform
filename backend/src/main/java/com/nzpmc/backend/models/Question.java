@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.Map;
 
 @Document("question")
 public class Question {
@@ -19,6 +20,8 @@ public class Question {
     private List<String> options;
     @Range(min=0, max=3)
     private int correctIndexChoice;
+
+    private Map<String, String> tags;
 
     public Question(String title, List<String> options, int correctIndexChoice) {
         this.title = title;
@@ -57,5 +60,13 @@ public class Question {
 
     public void setCorrectIndexChoice(int correctIndexChoice) {
         this.correctIndexChoice = correctIndexChoice;
+    }
+
+    public Map<String, String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Map<String, String> tags) {
+        this.tags = tags;
     }
 }

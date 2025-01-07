@@ -5,9 +5,15 @@ import { accessTokenAtom } from "../atoms";
 import Message from "./Message";
 import platformApi from "../services/platform-api";
 
-const CreateQuestion = ({questions, setQuestions}) => {
+const CreateQuestion = ({ questions, setQuestions }) => {
   // Questions currently require 4 options, but can changed easily by adjusting the backend and changing the below value
   const optionNo = 4;
+
+  // Add more tags when required
+  const tags = {
+    Difficulty: ["Easy", "Medium", "Hard"],
+    Topics: ["Mechanics", "Waves", "Algebra", "Geometry"],
+  };
 
   const accessToken = useAtomValue(accessTokenAtom);
 
@@ -16,6 +22,7 @@ const CreateQuestion = ({questions, setQuestions}) => {
     new Array(optionNo).fill("")
   );
   const [newQuestionCorrectIndex, setNewQuestionCorrectIndex] = useState(null);
+  const [newTags, setNewTags] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
@@ -26,8 +33,39 @@ const CreateQuestion = ({questions, setQuestions}) => {
   };
 
   const optionRadioStyle = {
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
+  };
+
+  const tagTitleStyle = {
+    marginBottom: 15,
+    display: "block",
+    borderBottom: "3px solid rgba(34, 40, 51, 0.84)",
+    paddingBottom: 5,
+  };
+
+  const tagHolderStyle = {
+    display: "flex",
+    width: "100%",
+    justifyContent: "space-between",
+    alignContent: "center",
+  };
+
+
+  const tagSecondaryColor = "rgba(80, 86, 112, 0.32)";
+  const finalTagHolderMargin = 15;
+
+  const tagNameStyle = {
+    padding: 12,
+    fontSize: 14,
+    display: "inline-block",
+  };
+
+  const tagSelectStyle = {
+    margin: 8,
+    width: 150,
+    maxWidth: "60%",
+    fontSize: 12,
   };
 
   // Wipes error message when user starts re-entering information
@@ -44,11 +82,13 @@ const CreateQuestion = ({questions, setQuestions}) => {
   const createQuestion = (event) => {
     event.preventDefault();
 
+    console.log(newTags);
+    
     if (
       !newQuestionTitle ||
       newQuestionOptions.some((option) => option === "" || option === null)
     ) {
-      setErrorMessage("Please fill in all boxes");
+      setErrorMessage("Please fill in the title and option boxes");
       return;
     }
     if (questions.find((question) => question.title === newQuestionTitle)) {
@@ -64,6 +104,7 @@ const CreateQuestion = ({questions, setQuestions}) => {
       title: newQuestionTitle,
       options: newQuestionOptions,
       correctIndexChoice: newQuestionCorrectIndex,
+      tags: Object.keys(newTags).length === 0 ? null : newTags,
     };
 
     platformApi
@@ -118,6 +159,44 @@ const CreateQuestion = ({questions, setQuestions}) => {
           />
         </div>
       ))}
+      <label style={tagTitleStyle}>Tags</label>
+      {Object.keys(tags).map((tagName, nameIndex) => (
+        <div
+          key={nameIndex}
+          // Styling here is a bit weird, it has a generic style, but also alternates in background colour and applies a padding to the last element
+          style={{
+            ...tagHolderStyle,
+            backgroundColor: nameIndex % 2 === 0 ? tagSecondaryColor : null,
+            marginBottom: Object.keys(tags).length === nameIndex + 1 ? finalTagHolderMargin : 0
+          }}
+        >
+          <label htmlFor={`questionTag${nameIndex}`} style={tagNameStyle}>
+            {tagName}
+          </label>
+          <select
+            name={`questionTag${nameIndex}`}
+            id={`questionTag${nameIndex}`}
+            onChange={(event) =>
+              setNewTags({ ...newTags, [tagName]: event.target.value })
+            }
+            onClick={() => setErrorMessage(null)}
+            style={tagSelectStyle}
+          >
+            <option id={0} value={null}>
+              select an option
+            </option>
+            {tags[tagName].map((tagOption, optionIndex) => (
+              <option
+                key={optionIndex + 1}
+                id={optionIndex + 1}
+                value={tagOption}
+              >
+                {tagOption}
+              </option>
+            ))}
+          </select>
+        </div>
+      ))}
       <Message message={errorMessage} type="error" />
       <Message message={successMessage} type="confirm" />
       <button type="submit">Submit</button>
@@ -125,4 +204,4 @@ const CreateQuestion = ({questions, setQuestions}) => {
   );
 };
 
-export default CreateQuestion
+export default CreateQuestion;
