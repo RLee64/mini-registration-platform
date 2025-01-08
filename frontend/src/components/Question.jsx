@@ -47,10 +47,16 @@ const Question = ({ question, competitions, setCompetitions }) => {
   };
 
   const questionTitleStyle = {
-    margin: "20px 0 5px 0",
+    margin: "20px 0 10px 0",
     paddingBottom: 5,
     borderBottom: "2px solid rgb(61, 60, 83)",
   };
+
+  const tagStyle = {
+    marginTop: 12,
+    paddingTop: 8,
+    borderTop: "2px solid rgb(61, 60, 83)",
+  }
 
   const linkQuestion = (event) => {
     event.preventDefault();
@@ -89,17 +95,33 @@ const Question = ({ question, competitions, setCompetitions }) => {
 
   return (
     <li className="item" style={mainStyle}>
-      <ul style={questionStyle}>
+      <div style={questionStyle}>
         <h4 style={questionTitleStyle}>{question.title}</h4>
-        {question.options.map((option, index) => {
-          const correct = question.correctIndexChoice === index ? "✔" : "✗";
-          return (
-            <li key={index}>
-              {correct} - {option}
-            </li>
-          );
-        })}
-      </ul>
+        <ul>
+          {question.options.map((option, index) => {
+            const correct = question.correctIndexChoice === index ? "✔" : "✗";
+            return (
+              <li key={index}>
+                {correct} - {option}
+              </li>
+            );
+          })}
+        </ul>
+        <p style={tagStyle}>
+        {question.tags ? (
+          <>
+            <strong>Tags - </strong>
+            {Object.entries(question.tags).map(([tag, option]) => (
+              <span>
+                {`${tag}: ${option} || `}
+              </span>
+            ))}
+          </>
+        ) : (
+          <>No tags</>
+        )}
+        </p>
+      </div>
       <div>
         {editingLink ? (
           <form onSubmit={linkQuestion} autoComplete="off">

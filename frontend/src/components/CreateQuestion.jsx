@@ -160,7 +160,7 @@ const CreateQuestion = ({ questions, setQuestions }) => {
         </div>
       ))}
       <label style={tagTitleStyle}>Tags</label>
-      {Object.keys(tags).map((tagName, nameIndex) => (
+      {Object.entries(tags).map(([tagName, tagOptions], nameIndex) => (
         <div
           key={nameIndex}
           // Styling here is a bit weird, it has a generic style, but also alternates in background colour and applies a padding to the last element
@@ -185,7 +185,7 @@ const CreateQuestion = ({ questions, setQuestions }) => {
             <option id={0} value={null}>
               select an option
             </option>
-            {tags[tagName].map((tagOption, optionIndex) => (
+            {tagOptions.map((tagOption, optionIndex) => (
               <option
                 key={optionIndex + 1}
                 id={optionIndex + 1}
