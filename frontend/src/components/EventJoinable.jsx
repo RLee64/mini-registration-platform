@@ -25,8 +25,6 @@ const EventJoinable = ({ event, account, setAccount }) => {
       });
   }
 
-  console.log(attemptExists);
-
   const eventHolderStyle = {
     display: "flex",
     flexDirection: "row",

@@ -41,9 +41,6 @@ const QuestionAreaAdmin = ({
       })
   );
 
-  console.log(filters);
-  console.log(filteredQuestions);
-
   const mainStyle = {
     display: "flex",
     flexDirection: "row",
