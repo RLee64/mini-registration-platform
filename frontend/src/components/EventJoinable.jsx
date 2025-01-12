@@ -1,6 +1,6 @@
 import { useAtomValue } from "jotai";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import platformApi from "../services/platform-api";
 import { accessTokenAtom } from "../atoms";
@@ -12,18 +12,26 @@ const EventJoinable = ({ event, account, setAccount }) => {
   const navigate = useNavigate();
 
   const [attemptExists, setAttemptExists] = useState(null);
+  const [competitionStartDate, setCompetitionStartDate] = useState("");
+  const [competitionEndDate, setCompetitionEndDate] = useState("");
 
   const joinedEvent = account.joinedEvents?.find(
     (eventName) => eventName === event.name
   );
 
-  if (joinedEvent && event.competitionId) {
-    platformApi
-      .attemptExists(event.competitionId, accessToken)
-      .then((response) => {
-        setAttemptExists(response);
+  useEffect(() => {
+    if (joinedEvent && event.competitionId) {
+      platformApi
+        .attemptExists(event.competitionId, accessToken)
+        .then((response) => {
+          setAttemptExists(response);
+        });
+      platformApi.getCompetitionDates(event.competitionId).then((response) => {
+        setCompetitionStartDate(new Date(response.startDate));
+        setCompetitionEndDate(new Date(response.endDate));
       });
-  }
+    }
+  });
 
   const eventHolderStyle = {
     display: "flex",
@@ -66,29 +74,52 @@ const EventJoinable = ({ event, account, setAccount }) => {
     navigate(`event/${event.name}`);
   };
 
+  let competitionState;
+
+  if (joinedEvent) {
+    if (event.competitionId) {
+      if (new Date() < competitionStartDate) {
+        competitionState = (
+          <p>
+            <em>
+              Competition will open at{" "}
+              {competitionStartDate.toLocaleString("en-GB")}
+            </em>
+          </p>
+        );
+      } else if (attemptExists) {
+        competitionState = (
+          <p style={attemptExistsStyle}>
+            <em>An attempt has been submitted!</em>
+          </p>
+        );
+      } else if (new Date() > competitionEndDate) {
+        competitionState = <p>Competition has expired</p>;
+      } else {
+        competitionState = (
+          <button style={startButtonStyle} onClick={startCompetition}>
+            Start Competition {attemptExists}
+          </button>
+        );
+      }
+    } else {
+      competitionState = (
+        <p>
+          <em>Event joined, check again closer to the start date</em>
+        </p>
+      );
+    }
+  } else {
+    competitionState = null;
+  }
+
   return (
     <li style={eventHolderStyle} className="item">
       <div style={eventStyle}>
         <h3>{event.name}</h3>
-        <p>{event.date}</p>
+        <p>{new Date(event.date).toLocaleString("en-GB")}</p>
         <p>{event.description}</p>
-        {joinedEvent ? (
-          event.competitionId ? (
-            attemptExists ? (
-              <p style={attemptExistsStyle}>
-                <em>An attempt has been submitted</em>
-              </p>
-            ) : (
-              <button style={startButtonStyle} onClick={startCompetition}>
-                Start Competition {attemptExists}
-              </button>
-            )
-          ) : (
-            <p>
-              <em>Event joined, please wait until the event date to start</em>
-            </p>
-          )
-        ) : null}
+        {competitionState}
       </div>
       {joinedEvent ? (
         <label style={joinStyle}>Joined!</label>

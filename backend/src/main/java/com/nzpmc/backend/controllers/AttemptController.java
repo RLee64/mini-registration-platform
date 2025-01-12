@@ -4,6 +4,7 @@ import com.nzpmc.backend.dtos.AttemptDetails;
 import com.nzpmc.backend.dtos.AuthObjects;
 import com.nzpmc.backend.models.Account;
 import com.nzpmc.backend.models.Attempt;
+import com.nzpmc.backend.models.Competition;
 import com.nzpmc.backend.services.AccountService;
 import com.nzpmc.backend.services.AttemptService;
 import com.nzpmc.backend.services.CompetitionService;
@@ -11,6 +12,11 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @CrossOrigin
 @RestController
@@ -28,7 +34,7 @@ public class AttemptController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> submitAttempt(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody AttemptDetails attemptDetails) {
+    public ResponseEntity<Object> submitAttempt(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody AttemptDetails attemptDetails, ZoneId zoneId) {
         // Run authorization
         AuthObjects authObjects = accountService.authenticateAccount(authorizationHeader);
 
@@ -41,8 +47,17 @@ public class AttemptController {
         Account account = authObjects.getAccount();
 
         // Ensure that competition exists
-        if (!competitionService.competitionExists(attemptDetails.competitionTitle())) {
+        Competition competition = competitionService.findCompetition(attemptDetails.competitionTitle());
+        if (competition == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Competition not found");
+        }
+
+        // Ensure that submission is within timeframe
+        Date today = Date.from(ZonedDateTime.now(ZoneId.of("Pacific/Auckland")).toInstant());
+        Date startDate = Date.from(competition.getStartDate().toInstant());
+        Date endDate = Date.from(competition.getEndDate().toInstant().plus(1, ChronoUnit.MINUTES)); // +1 min for leeway
+        if (today.before(startDate) || today.after(endDate)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Outside of submission timeframe");
         }
 
         // Check if user has already made an attempt

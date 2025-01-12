@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,9 +119,18 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Event does not exist or has no assigned competition");
         }
 
-        // Fetch the competition object and return the ID & associated questions
+        // Ensure request is being made within the competition timeframe
         Competition competition = competitionService.findCompetition(event.getCompetitionId());
 
+        Date today = Date.from(ZonedDateTime.now(ZoneId.of("Pacific/Auckland")).toInstant());
+        Date startDate = Date.from(competition.getStartDate().toInstant());
+        Date endDate = Date.from(competition.getEndDate().toInstant());
+
+        if (today.before(startDate) || today.after(endDate)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Outside of competition timeframe");
+        }
+
+        // Return the ID & associated questions
         List<Question> questions = questionService.findQuestions(competition.getQuestionIds());
 
         // Remove correct index positions (correctIndexChoice has type int so -1 is used in the place of null)

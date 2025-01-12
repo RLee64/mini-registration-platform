@@ -56,7 +56,7 @@ const CreateEvent = ({ events, setEvents }) => {
     const newEvent = {
       name: newEventName,
       description: newEventDescription,
-      date: new Date(newEventDate).toISOString(),
+      date: eventDate.toISOString(),
     };
 
     platformApi

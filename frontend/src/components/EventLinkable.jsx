@@ -96,7 +96,7 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
     <li className="item" style={eventHolderStyle}>
       <div style={eventStyle}>
         <h3>{event.name}</h3>
-        <p>{event.date}</p>
+        <p>{new Date(event.date).toLocaleString('en-GB')}</p>
         <p>{event.description}</p>
         {event.competitionId ? (
           <>
@@ -126,7 +126,10 @@ const EventLinkable = ({ event, events, setEvents, competitions }) => {
               </option>
             ))}
           </select>
-          <button type="submit" style={{ ...smallButtonStyle, marginRight: 20 }}>
+          <button
+            type="submit"
+            style={{ ...smallButtonStyle, marginRight: 20 }}
+          >
             Link
           </button>
           <button

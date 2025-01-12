@@ -111,8 +111,8 @@ const Question = ({ question, competitions, setCompetitions }) => {
         {question.tags ? (
           <>
             <strong>Tags - </strong>
-            {Object.entries(question.tags).map(([tag, option]) => (
-              <span>
+            {Object.entries(question.tags).map(([tag, option], index) => (
+              <span key={index}>
                 {`${tag}: ${option} || `}
               </span>
             ))}

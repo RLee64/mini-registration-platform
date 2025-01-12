@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Collapsible from "react-collapsible";
 
 const Competition = ({ competition, questions }) => {
@@ -23,10 +22,29 @@ const Competition = ({ competition, questions }) => {
     borderBottom: "2px solid rgb(61, 60, 83)",
   };
 
+  const basicInfoStyle = {
+    display: "flex",
+    flexDirection: "row",
+    gap: 40,
+    marginTop: -10,
+    marginBottom: 10,
+  };
+
   return (
     <li className="item">
       <h3>{competition.title}</h3>
-      <p>Total question count: {competition.questionIds.length}</p>
+      <div style={basicInfoStyle}>
+        <div>
+          <p>Start Date:</p>
+          <p>End Date:</p>
+          <p>Total Question Count:</p>
+        </div>
+        <div>
+          <p>{new Date(competition.startDate).toLocaleString('en-GB')}</p>
+          <p>{new Date(competition.endDate).toLocaleString('en-GB')}</p>
+          <p>{competition.questionIds.length}</p>
+        </div>
+      </div>
       <Collapsible
         trigger="Questions"
         triggerStyle={triggerStyle}

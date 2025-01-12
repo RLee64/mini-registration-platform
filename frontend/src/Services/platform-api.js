@@ -100,6 +100,13 @@ const getCompetitions = (accessToken) => {
   return request.then((response) => response.data);
 };
 
+const getCompetitionDates = (competitionTitle) => {
+  const request = axios.get(
+    `${baseUrl}/competitions/dates/${competitionTitle}`
+  );
+  return request.then((response) => response.data);
+};
+
 // ADMIN NEEDED
 const postCompetition = (newCompetition, accessToken) => {
   const request = axios.post(
@@ -158,6 +165,7 @@ export default {
   attemptExists,
   postAttempt,
   getCompetitions,
+  getCompetitionDates,
   postCompetition,
   linkQuestion,
   getQuestions,

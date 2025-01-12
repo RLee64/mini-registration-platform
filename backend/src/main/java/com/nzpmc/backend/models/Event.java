@@ -51,8 +51,8 @@ public class Event {
         this.description = description;
     }
 
-    public String getDate() {
-        return date.toString();
+    public Date getDate() {
+        return date;
     }
 
     public void setDate(Date date) {this.date = date; }

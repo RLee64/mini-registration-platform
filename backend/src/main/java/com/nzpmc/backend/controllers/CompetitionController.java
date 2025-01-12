@@ -12,8 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -44,6 +43,21 @@ public class CompetitionController {
         // Get and return competitions
         List<Competition> competitions = competitionService.findAllCompetitions();
         return ResponseEntity.status(HttpStatus.OK).body(competitions);
+    }
+
+    @GetMapping("/dates/{competitionTitle}")
+    public ResponseEntity<Object> getCompetitionDates(@PathVariable String competitionTitle) {
+        Competition competition = competitionService.findCompetition(competitionTitle);
+
+        if (competition == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Competition not found");
+        }
+
+        Map<String, Date> dates = new HashMap<>();
+        dates.put("startDate", competition.getStartDate());
+        dates.put("endDate", competition.getEndDate());
+
+        return ResponseEntity.status(HttpStatus.OK).body(dates);
     }
 
     // ADMIN AUTH REQUIRED
