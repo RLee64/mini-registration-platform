@@ -56,30 +56,45 @@ const QuestionAreaAdmin = ({
     width: "30%",
   };
 
+  const filterSectionStyle = {
+    display: "flex",
+    gap: 30,
+  };
+
+  const filterSelectStyle = {
+    marginLeft: 10,
+    width: 100,
+  };
+
   return (
     <div style={mainStyle}>
       <div style={majorSectionStyle}>
         <h2>Question Pool</h2>
         <h3>Filter</h3>
-        {Object.entries(filterOptions).map(([filter, options], filterIndex) => (
-          <div key={filterIndex}>
-            <label htmlFor={`filter${filterIndex}`}>{filter}</label>
-            <select
-              name={`filter${filterIndex}`}
-              id={`filter${filterIndex}`}
-              onChange={(event) =>
-                setFilters({ ...filters, [filter]: event.target.value })
-              }
-            >
-              <option value={""}></option>
-              {options.map((option, optionIndex) => (
-                <option key={optionIndex} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-        ))}
+        <div style={filterSectionStyle}>
+          {Object.entries(filterOptions).map(
+            ([filter, options], filterIndex) => (
+              <div key={filterIndex}>
+                <label htmlFor={`filter${filterIndex}`}>{filter}</label>
+                <select
+                  name={`filter${filterIndex}`}
+                  id={`filter${filterIndex}`}
+                  onChange={(event) =>
+                    setFilters({ ...filters, [filter]: event.target.value })
+                  }
+                  style={filterSelectStyle}
+                >
+                  <option value={""}></option>
+                  {options.map((option, optionIndex) => (
+                    <option key={optionIndex} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )
+          )}
+        </div>
         {filteredQuestions.length !== 0 ? (
           <ul>
             {filteredQuestions.map((question) => (
