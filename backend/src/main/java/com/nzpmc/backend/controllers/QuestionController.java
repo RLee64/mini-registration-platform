@@ -3,7 +3,6 @@ package com.nzpmc.backend.controllers;
 import com.nzpmc.backend.dtos.AuthObjects;
 import com.nzpmc.backend.models.Question;
 import com.nzpmc.backend.services.AccountService;
-import com.nzpmc.backend.services.CompetitionService;
 import com.nzpmc.backend.services.QuestionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,12 +17,10 @@ import java.util.List;
 public class QuestionController {
 
     private final AccountService accountService;
-    private final CompetitionService competitionService;
     private final QuestionService questionService;
 
-    public QuestionController(AccountService accountService, CompetitionService competitionService,QuestionService questionService) {
+    public QuestionController(AccountService accountService,QuestionService questionService) {
         this.accountService = accountService;
-        this.competitionService = competitionService;
         this.questionService = questionService;
     }
 

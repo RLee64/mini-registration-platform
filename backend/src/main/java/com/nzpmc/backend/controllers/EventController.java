@@ -136,7 +136,7 @@ public class EventController {
         // Remove correct index positions (correctIndexChoice has type int so -1 is used in the place of null)
         questions.forEach(question -> {question.setCorrectIndexChoice(-1);});
 
-        CompetitionData competitionData = new CompetitionData(competition.getTitle(), questions);
+        CompetitionData competitionData = new CompetitionData(competition, questions);
 
         return ResponseEntity.status(HttpStatus.OK).body(competitionData);
     }

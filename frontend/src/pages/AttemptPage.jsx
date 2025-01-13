@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAtomValue } from "jotai";
 
 import platformApi from "../services/platform-api";
@@ -17,6 +17,9 @@ const AttemptPage = () => {
   const [competitionData, setCompetitionData] = useState(null);
   const [answers, setAnswers] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+  const [timeRemaining, setTimeRemaining] = useState(null);
+
+  const answersRef = useRef(answers);
 
   const questionStyle = {
     border: 0,
@@ -39,6 +42,7 @@ const AttemptPage = () => {
   };
 
   useEffect(() => {
+    answersRef.current = answers
     setErrorMessage("");
   }, [answers]);
 
@@ -54,22 +58,37 @@ const AttemptPage = () => {
       })
       .catch((error) => {
         console.log(error);
-        if (error.status === 404 || error.status === 401) {
-          navigate("/");
-        }
+        navigate("/");
       });
   }, []);
 
-  const changeAnswer = (questionTitle, index) => {
-    setAnswers({ ...answers, [questionTitle]: index });
-  };
+  useEffect(() => {
+    if (!competitionData) {
+      return;
+    }
+    const countdownInterval = setInterval(() => {
+      const currentTime = new Date().getTime();
+      const endTime = new Date(competitionData.competition.endDate).getTime();
+      let newTimeRemaining = endTime - currentTime;
+
+      if (newTimeRemaining <= 0) {
+        setTimeRemaining(0);
+        submitAttempt();
+        clearInterval(countdownInterval);
+      } else {
+        setTimeRemaining(newTimeRemaining);
+      }
+    }, 1000);
+
+    return () => clearInterval(countdownInterval);
+  }, [competitionData]);
 
   const submitAttempt = (event) => {
-    event.preventDefault();
+    event?.preventDefault();
 
     const attemptDetails = {
-      competitionTitle: competitionData.competitionTitle,
-      attempts: answers,
+      competitionTitle: competitionData.competition.title,
+      attempts: answersRef.current,
     };
 
     platformApi
@@ -83,13 +102,34 @@ const AttemptPage = () => {
       });
   };
 
+  const changeAnswer = (questionTitle, index) => {
+    setAnswers({ ...answers, [questionTitle]: index });
+  };
+
   if (!competitionData) {
     return null;
   }
 
+  const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((timeRemaining / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((timeRemaining / (1000 * 60)) % 60);
+  const seconds = Math.floor((timeRemaining / 1000) % 60);
+
   return (
     <div>
-      <h1>{competitionData.competitionTitle}</h1>
+      <h1>{competitionData.competition.title}</h1>
+      <p>Time remaining:</p>
+      <p>
+        {!days ? null : <span>{days} Days - </span>}
+        {!days && !hours ? null : <span>{hours} Hours - </span>}
+        {!days && !hours && !minutes ? null : <span>{minutes} Minutes - </span>}
+        {timeRemaining === null ? (
+          <span>Loading...</span>
+        ) : (
+          <span>{seconds} Seconds </span>
+        )}
+      </p>
+
       <form onSubmit={submitAttempt} autoComplete="off">
         {competitionData.questions.map((question, index) => (
           <fieldset key={question.title} style={questionStyle}>

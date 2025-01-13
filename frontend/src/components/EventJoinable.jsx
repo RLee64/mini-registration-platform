@@ -31,7 +31,7 @@ const EventJoinable = ({ event, account, setAccount }) => {
         setCompetitionEndDate(new Date(response.endDate));
       });
     }
-  });
+  }, [joinedEvent, event.competitionId]);
 
   const eventHolderStyle = {
     display: "flex",
@@ -75,7 +75,7 @@ const EventJoinable = ({ event, account, setAccount }) => {
   };
 
   let competitionState;
-
+  
   if (joinedEvent) {
     if (event.competitionId) {
       if (new Date() < competitionStartDate) {
