@@ -34,7 +34,7 @@ public class AttemptController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> submitAttempt(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody AttemptDetails attemptDetails, ZoneId zoneId) {
+    public ResponseEntity<Object> submitAttempt(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody AttemptDetails attemptDetails) {
         // Run authorization
         AuthObjects authObjects = accountService.authenticateAccount(authorizationHeader);
 
