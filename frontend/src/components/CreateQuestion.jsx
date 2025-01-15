@@ -77,6 +77,7 @@ const CreateQuestion = ({ questions, setQuestions }) => {
     setNewQuestionTitle("");
     setNewQuestionOptions(new Array(optionNo).fill(""));
     setNewQuestionCorrectIndex(null);
+    setNewTags({});
   };
 
   const createQuestion = (event) => {

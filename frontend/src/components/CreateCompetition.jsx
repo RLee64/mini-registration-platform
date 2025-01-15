@@ -21,6 +21,8 @@ const CreateCompetition = ({ competitions, setCompetitions }) => {
 
   const clearCompetitionFields = () => {
     setNewCompetitionTitle("");
+    setNewCompetitionStartDate("");
+    setNewCompetitionEndDate("");
   };
 
   const createCompetition = (event) => {
